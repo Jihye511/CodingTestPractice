@@ -1,27 +1,28 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.Scanner;
 import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main {
+
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int T = Integer.parseInt(br.readLine());
+        BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
 
+        int T = Integer.parseInt(bf.readLine());
+        
+        for (int i =0; i<T; i++){
+            int N = Integer.parseInt(bf.readLine());
+            int[] numbers = new int[N];
 
-        for(int t=0;t<T;t++){
-            int N = Integer.parseInt(br.readLine());
-            int arr[] = new int[N];
-
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            for(int i=0;i<N;i++){
-                arr[i] = Integer.parseInt(st.nextToken());
+            StringTokenizer st = new StringTokenizer(bf.readLine());
+            for (int j =0; j<N; j++){
+                numbers[j] = Integer.parseInt(st.nextToken());
             }
+            Arrays.sort(numbers);
+            System.out.println(numbers[0] +" "+ numbers[N-1]);
 
-            Arrays.sort(arr);
-            System.out.println(arr[0]+" "+arr[N-1]);
         }
+
     }
 }

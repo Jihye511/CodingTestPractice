@@ -6,43 +6,47 @@ import java.util.*;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
-        StringBuilder sb = new StringBuilder();
+    public static void main(String[] args) throws IOException{
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
 
-        int n, k;
-        int[] arr, D, temp;
+        int[] arr,D,temp;
         String[] s = br.readLine().split(" ");
-        n = Integer.parseInt(s[0]);
-        k = Integer.parseInt(s[1]);
+        int N = Integer.parseInt(s[0]);
+        int K = Integer.parseInt(s[1]);
 
-        arr = new int[n + 1];
-        D = new int[n + 1];
+        arr = new int[N+1];
+        D = new int[N+1];
 
         s = br.readLine().split(" ");
+
         //k번 섞은 배열
-        for (int i = 1; i <= n; i++) {
+        for(int i= 1; i<=N; i++){
             arr[i] = Integer.parseInt(s[i-1]);
         }
-
-        s = br.readLine().split(" ");
-        //D 배열
-        for (int i = 1; i <= n; i++) {
+        s= br.readLine().split(" ");
+        //D 입력받기
+        for(int i =1; i<=N; i++){
             D[i] = Integer.parseInt(s[i-1]);
         }
 
-        for (int i = 0; i < k; i++) {
-            temp = new int[n+1];
-            for (int j = 1; j <= n; j++) {
+        for(int i=0; i<K; i++){
+            temp = new int[N+1];
+            for(int j =0; j<=N; j++){
                 temp[D[j]] = arr[j];
             }
-            arr = temp;
+            arr= temp;
         }
 
-        for (int i = 1; i <= n; i++) {
-            sb.append(arr[i]+ " ");
+        for(int i =1; i<=N; i++){
+            sb.append(arr[i] +" ");
         }
         System.out.println(sb.toString());
 
+
+
     }
+
+
 }

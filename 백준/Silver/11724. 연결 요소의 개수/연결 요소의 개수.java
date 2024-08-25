@@ -1,60 +1,54 @@
 import java.util.*;
 import java.io.*;
-
-public class Main{
-public static int N;
-    public static int M;
-    public static int answer;
-    public static ArrayList<Integer>[] edgeList;
-    public static boolean[] visited;
-    public static int[] dfsArr;
-    public static StringBuilder sb = new StringBuilder();
-
-    public static void main(String[] args) throws Exception {
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+public class Main {
+    static int N,M;
+    static  ArrayList<ArrayList<Integer>> node = new ArrayList<>();
+    static int count;
+    static boolean[] visited;
+    static Queue<Integer> q = new ArrayDeque<>();
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        String line = br.readLine();
-        String[] split = line.split(" ");
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
 
-        N = Integer.parseInt(split[0]);
-        M = Integer.parseInt(split[1]);
-        dfsArr = new int[N];
-        edgeList = new ArrayList[N + 1];
-        visited = new boolean[N + 1];
-
-        for (int i = 0; i < N + 1; i++) {
-            edgeList[i] = new ArrayList<>();
+        for (int i = 0; i <= N; i++) {
+            node.add(new ArrayList<>());
         }
+        visited = new boolean[N+1];
+        count =0;
         for (int i = 0; i < M; i++) {
-            String line1 = br.readLine();
-            String[] split1 = line1.split(" ");
-            int from = Integer.parseInt(split1[0]);
-            int to = Integer.parseInt(split1[1]);
-            edgeList[from].add(to);
-            edgeList[to].add(from);
-        }
+            st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
 
-        for (int i = 1; i <= N; i++) {
-            if (!visited[i]) {
-                dfs(i);
-                answer++;
+            node.get(a).add(b);
+            node.get(b).add(a);
+        }
+        for(int i =1; i<=N;i++){
+            if(!visited[i]){
+                visited[i]=true;
+                bfs(i);
             }
         }
-
-        bw.write(answer + "\n");
-
-        bw.flush();
-        bw.close();
-        br.close();
+        System.out.println(count);
     }
-
-    private static void dfs(int start) {
-        visited[start] = true;
-        for (int to : edgeList[start]) {
-            if (!visited[to]) {
-                dfs(to);
-            }
+    public static void bfs(int n){
+        for(int i =0; i<node.get(n).size(); i++){
+            int a = node.get(n).get(i);
+            q.offer(a);
         }
+        while(!q.isEmpty()){
+            int next = q.poll();
+            if(!visited[next]){
+                visited[next]=true;
+                for(int i =0; i<node.get(next).size();i++){
+                    int b = node.get(next).get(i);
+                    q.offer(b);
+                }
+            }else continue;
+        }
+        count++; //단지 돌고 +1
     }
-}
+ }

@@ -1,59 +1,54 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.StringTokenizer;
-
+import java.util.*;
+import java.io.*;
 public class Main {
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-		StringTokenizer st;
-		
-		while(true) {
-			int ans = 0;
-			st = new StringTokenizer(br.readLine());
-			int w = Integer.parseInt(st.nextToken());
-			int h = Integer.parseInt(st.nextToken());
-			int[][] map = new int[h][w];
-			int[][] visit = new int[h][w];
-			
-			if(w == 0 && h == 0) {
-				break;
-			}
-			
-			for(int i=0; i<h; ++i) {
-				st = new StringTokenizer(br.readLine());
-				for(int j=0; j<w; ++j) {
-					map[i][j] = Integer.parseInt(st.nextToken());
-				}
-			}
-			
-			for(int i=0; i<h; ++i) {
-				for(int j=0; j<w; ++j) {
-					if(map[i][j] == 1 && visit[i][j] == 0) {
-						DFS(h, w, i, j, map, visit);
-						++ans;
-					}
-				}
-			}
-			bw.write(ans + "\n");
-		}
-		bw.close();
-	}
-	public static void DFS(int h, int w, int y, int x, int[][] map, int[][] visit) {
-		int[] dy = {-1, -1, -1, 0, 0, 0, 1, 1, 1};
-		int[] dx = {-1, 0, 1, -1, 0, 1, -1, 0, 1};
-		
-		for(int i=0; i<9; ++i) {
-			int nextY = y + dy[i];
-			int nextX = x + dx[i];
-			if(nextY < 0 || nextX < 0 || nextY >= h || nextX >= w || visit[nextY][nextX] == 1 || map[nextY][nextX] == 0) {
-				continue;
-			}
-			visit[nextY][nextX] = 1;
-			DFS(h, w, nextY, nextX, map, visit);
-		}
-	}
-}
+    static int w,h;
+    static int[][] map;
+    static int[] dx = {-1,1,0,0,-1,-1,1,1};
+    static int[] dy = {0,0,-1,1,-1,1,-1,1};
+    static boolean[][] visited;
+    public static void main(String[] args) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
+
+        while (true){
+            int count=0;
+            st = new StringTokenizer(br.readLine());
+            w = Integer.parseInt(st.nextToken());
+            h = Integer.parseInt(st.nextToken());
+            if(w==0 && h==0){
+                return;
+            }
+
+            map=new int[h][w];
+            visited = new boolean[h][w];
+            for(int i =0; i<h; i++){
+                st = new StringTokenizer(br.readLine());
+                for(int j =0; j<w; j++){
+                    map[i][j] = Integer.parseInt(st.nextToken());
+                }
+            }
+            for(int i =0; i<h; i++){
+                for(int j =0; j<w; j++){
+                    if(!visited[i][j] && map[i][j] ==1){
+                        dfs(i,j);
+                        count++;
+                    }
+                }
+            }
+            System.out.println(count);
+        }
+    }
+    public static void dfs(int x, int y){
+        visited[x][y]=true;
+        for(int i =0;i<8; i++){
+            int nx = dx[i] + x;
+            int ny = dy[i] + y;
+
+            //조건1. 지도밖으로 나가면 continue;
+            if(nx<0 || ny<0 || nx>=h || ny>=w) continue;
+            if(map[nx][ny] ==1 && !visited[nx][ny]){
+                dfs(nx,ny);
+            }
+        }
+    }
+ }

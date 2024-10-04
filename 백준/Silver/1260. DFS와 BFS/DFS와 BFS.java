@@ -1,71 +1,69 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
-
+import java.io.*;
+import java.util.*;
 public class Main {
-    static StringBuilder sb = new StringBuilder();
-    static int N,M,V;
-    static int[][] arr;
-    static boolean[] check;
-    static int[][] dfsdata,bfsdata;
-    static ArrayList<Integer> stack;
-    static Queue<Integer> q = new LinkedList<>();
+    static int n,m,v;
+    static ArrayList<Integer> [] map;
+    static boolean[] visited_dfs,visited_bfs;
+    static StringBuilder sb_dfs = new StringBuilder();
+    static StringBuilder sb_bfs = new StringBuilder();
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st =new StringTokenizer(br.readLine());
+    public static void main(String[] args) throws IOException{
+        BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st= new StringTokenizer(br.readLine());
+        n =Integer.parseInt(st.nextToken());
+        m =Integer.parseInt(st.nextToken());
+        v = Integer.parseInt(st.nextToken());
 
-
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
-        V = Integer.parseInt(st.nextToken());
-
-        arr = new int[N+1][N+1];
-        check = new boolean[N+1];
-        //배열에 연결 네트워크 넣기
-        for (int i=0; i<M; i++){
+        map = new ArrayList[n+1];
+        visited_dfs = new boolean[n+1];
+        visited_bfs = new boolean[n+1];
+        for(int i=0; i<n+1; i++){
+            map[i] = new ArrayList<>();
+        }
+        for(int i =0; i<m; i++){
             st = new StringTokenizer(br.readLine());
             int a = Integer.parseInt(st.nextToken());
             int b = Integer.parseInt(st.nextToken());
-            arr[a][b] = arr[b][a] =1;
+
+            map[a].add(b);
+            map[b].add(a);
         }
-        dfs(V);
-        sb.append("\n");
-        check = new boolean[N+1];
-
-        bfs(V);
-        System.out.println(sb.toString());
-
-
+        for(int i=1; i<=n; i++){
+            Collections.sort(map[i]);
+        }
+        dfs(v);
+        bfs(v);
+        System.out.println(sb_dfs);
+        System.out.println(sb_bfs);
     }
     public static void dfs(int start){
-        check[start] =true;
-        sb.append(start +" ");
+        sb_dfs.append(start).append(" ");
+        visited_dfs[start] = true;
 
-        for(int i =0; i<=N; i++){
-            if(arr[start][i] ==1 && !check[i]){
-                dfs(i);
+        for(int i =0; i<map[start].size(); i++){
+            int next=map[start].get(i);
+            if(!visited_dfs[next]){
+                dfs(next);
             }
         }
+
     }
     public static void bfs(int start){
-        q.add(start);
-        check[start] =true;
-
+        Queue<Integer> q= new LinkedList<>();
+        visited_bfs[start]=true;
+        q.offer(start);
+        sb_bfs.append(start).append(" ");
         while(!q.isEmpty()){
-            start = q.poll();
-            sb.append(start +" ");
-
-            for(int i =1; i<=N; i++){
-                if(arr[start][i] == 1&& !check[i]){
-                    q.add(i);
-                    check[i] = true;
+            int current = q.poll();
+            for(int i=0; i<map[current].size(); i++){
+                int next = map[current].get(i);
+                if(!visited_bfs[next]){
+                    visited_bfs[next]=true;
+                    q.offer(next);
+                    sb_bfs.append(next).append(" ");
                 }
             }
         }
     }
+
 }

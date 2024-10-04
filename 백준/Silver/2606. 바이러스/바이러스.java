@@ -1,45 +1,48 @@
-import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
+// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import java.io.*;
 import java.util.*;
-
 public class Main {
-    static int com;
-    static int connect;
-    static int[][] arr;
-    static boolean[] visit;
-    static int count =0;
-
-
-    public static void main(String[] args) throws IOException {
+    static int n,cnt,vertex;
+    static ArrayList<Integer>[] node;
+    static boolean[] visited;
+    public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
 
-        com = Integer.parseInt(br.readLine());
-        connect = Integer.parseInt(br.readLine());
-        arr = new int[com +1][com+1];
-        visit = new boolean[com+1];
-
-        //연결노드 설정
-        for(int i =0; i<connect; i++){
+        n = Integer.parseInt(br.readLine());
+        node = new ArrayList[n+1];
+        visited = new boolean[n+1];
+        vertex = Integer.parseInt(br.readLine());
+        for(int i =0; i<n+1; i++){
+            node[i] = new ArrayList<>();
+        }
+        for(int i =0;i<vertex;i++){
             st = new StringTokenizer(br.readLine());
             int a = Integer.parseInt(st.nextToken());
             int b = Integer.parseInt(st.nextToken());
 
-            arr[a][b] = arr[b][a] = 1;
+            node[a].add(b);
+            node[b].add(a);
         }
-        dfs(1);
-
-        System.out.println(count-1);
+        bfs(1);
+        System.out.println(cnt);
     }
-    public static void dfs(int start){
-        visit[start] =true;
-        count ++;
+    public static void bfs(int c){
+        visited[c] = true;
+        Queue<Integer> q = new LinkedList<>();
+        q.offer(c);
+        while(!q.isEmpty()){
+            int com = q.poll();
+            for(int i =0; i<node[com].size(); i++){
+                int next =node[com].get(i);
+                if(!visited[next]){
+                    visited[next]=true;
+                    q.offer(next);
+                    cnt+=1;
+                }
+            }
 
-        for(int i =0; i<=com; i++){
-            if(arr[start][i] == 1 && !visit[i])
-                dfs(i);
         }
     }
 }

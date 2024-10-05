@@ -1,43 +1,48 @@
-import java.util.*;
 import java.io.*;
-
-public class Main{
-    static int n,m;
+import java.util.*;
+public class Main {
+    static int n, m;
     static int[] arr;
-    static int[] value;
-    static HashSet<Integer> hash = new HashSet<>();
+    static int[] num;
     static StringBuilder sb = new StringBuilder();
-    public static void main(String[] args)throws IOException{
+    static boolean[] visited;
+    static int before;
+
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-
         n = Integer.parseInt(st.nextToken());
         m = Integer.parseInt(st.nextToken());
         arr = new int[m];
-        value = new int[n];
+        num = new int[n];
+        visited = new boolean[n];
         st = new StringTokenizer(br.readLine());
-        for(int i =0; i<n; i++){
-            value[i] = Integer.parseInt(st.nextToken());
+        for (int i = 0; i < n; i++) {
+            num[i] = Integer.parseInt(st.nextToken());
         }
-        Arrays.sort(value);
+        Arrays.sort(num);
+
+
         dfs(0);
         System.out.println(sb);
     }
-    public static void dfs(int depth){
-        if(depth==m){
-            for(int s : arr){
-                sb.append(s).append(" ");
+
+    public static void dfs(int depth) {
+        if (depth == m) {
+            for (int val : arr) {
+                sb.append(val).append(" ");
             }
-            sb.append('\n');
+            sb.append("\n");
             return;
         }
-        int before=0;
-        for(int i =0; i<n; i++){
-            if(before !=value[i]){
-                arr[depth] = value[i];
-                before= value[i];
-                dfs(depth+1);
-            }
+        int before = 0;
+        for (int i = 0; i < n; i++) {
+                if (before != num[i]) {
+                    before = num[i];
+                    arr[depth] = num[i];
+                    dfs(depth + 1);
+                }
         }
     }
 }
+

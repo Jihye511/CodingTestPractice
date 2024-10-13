@@ -1,44 +1,41 @@
 import java.io.*;
 import java.util.*;
 class Solution {
-    static int[][] map;
-    static int[] dx={-1,1,0,0};
-    static int[] dy={0,0,-1,1};
-    static int[] result =new int[2];
+    static int[][] result;
+    static int n,m;
+    static int[] dx = {-1,1,0,0};
+    static int[] dy = {0,0,-1,1};
     public int solution(int[][] maps) {
-        map = maps;
         int answer = 0;
-        answer=bfs(0,0);
+        n  = maps.length;
+        m = maps[0].length;
+
+        dfs(maps);
+        if(maps[n-1][m-1] ==1){
+            answer =-1;
+        }else{
+            answer = maps[n-1][m-1];
+        }
         
         return answer;
     }
-    public static int bfs(int y,int x){
-        int n = map.length;
-        int m = map[0].length;
-        boolean[][] visited= new boolean[n][m];
-        visited[y][x] = true;
-        Queue<int[]> q = new LinkedList<>();
-        q.offer(new int[]{y,x});
+    public static void dfs(int[][] maps){
+        Queue<int[]> q= new ArrayDeque<>();
+        q.offer(new int[]{0,0});
         while(!q.isEmpty()){
-            int[] point = q.poll();
-            int rx = point[1];
-            int ry = point[0];
-            if (ry == n - 1 && rx == m - 1) {
-                return map[ry][rx];
-            }
-            
+            int[] now = q.poll();
             for(int i =0; i<4; i++){
-                int nx = rx +dx[i];
-                int ny = ry +dy[i];
-                if (nx >= 0 && nx < m && ny >= 0 && ny < n && !visited[ny][nx] && map[ny][nx] == 1) {
-                    visited[ny][nx] = true;
-                    map[ny][nx] = map[ry][rx] +1;
-                    q.offer(new int[]{ny,nx});
+                int nx = now[0] +dx[i];
+                int ny = now[1] +dy[i];
+                if(isRange(nx,ny) &&maps[nx][ny] ==1){
+                    maps[nx][ny] +=maps[now[0]][now[1]];
+                    q.offer(new int[] {nx,ny});
                 }
-                
             }
+          
         }
-        return -1;
     }
-    
+    public static boolean isRange(int x, int y){
+        return (x>=0 && x<n && y>=0 && y<m);
+    }
 }

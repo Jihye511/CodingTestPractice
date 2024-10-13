@@ -10,18 +10,18 @@ class Solution {
         num = n;
         node = computers;
         visited = new boolean[n];
-        list = new ArrayList[n];
-        for(int i =0; i<n; i++){
-            list[i] = new ArrayList<>();
-        }        
-        for(int i =0; i<n; i++){
-            for(int j =0; j<n ; j++){
-                if(i !=j && node[i][j] ==1){
-                    list[i].add(j);
-                    list[j].add(i);
-                }
-            }
-        }
+        // list = new ArrayList[n];
+        // for(int i =0; i<n; i++){
+        //     list[i] = new ArrayList<>();
+        // }        
+        // for(int i =0; i<n; i++){
+        //     for(int j =0; j<n ; j++){
+        //         if(i !=j && node[i][j] ==1){
+        //             list[i].add(j);
+        //             list[j].add(i);
+        //         }
+        //     }
+        // }
         
         for(int i =0; i<n; i++){
             if(!visited[i]){
@@ -34,13 +34,18 @@ class Solution {
     }
     public static void dfs(int now){
         visited[now] = true;
-        for(int i =0; i<list[now].size(); i++){
-            int next = list[now].get(i);
-            if(!visited[next]){
-                visited[next] =true;
-                dfs(next); 
+        for(int i =0; i<num; i++){
+            if(!visited[i] && node[now][i] ==1){
+                dfs(i);
             }
         }
+        // for(int i =0; i<list[now].size(); i++){
+        //     int next = list[now].get(i);
+        //     if(!visited[next]){
+        //         visited[next] =true;
+        //         dfs(next); 
+        //     }
+        // }
     
     }
 }

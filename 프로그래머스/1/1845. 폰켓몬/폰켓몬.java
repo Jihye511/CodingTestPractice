@@ -1,22 +1,18 @@
 import java.io.*;
 import java.util.*;
-
 class Solution {
     public int solution(int[] nums) {
         int answer = 0;
-        int len = nums.length /2;
-        HashSet<Integer> set = new HashSet<>();
-        
-        for(int num: nums){
-            set.add(num);
+        HashSet<Integer> hash = new HashSet<>();
+        for(int i =0; i<nums.length; i++){
+            hash.add(nums[i]);
         }
-        int size = set.size();
-        
-        if(size < len)
-            answer = size;
-        else 
-            answer = len;
-        
+        if(nums.length/2 >hash.size()){
+            answer = hash.size();
+        }else{
+            answer = nums.length/2;
+        }
+
         return answer;
     }
 }

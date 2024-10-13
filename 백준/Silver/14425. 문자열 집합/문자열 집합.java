@@ -8,20 +8,16 @@ public class Main{
       n = Integer.parseInt(st.nextToken());
       m = Integer.parseInt(st.nextToken());
 
-      String[] S = new String[n];
-      int cnt =0 ;
-
-      for(int i=0; i<n; i++){
-         S[i] = br.readLine();
+      int cnt = 0;
+      Set<String> set = new HashSet<>();
+      for(int i =0; i<n; i++){
+         set.add(br.readLine());
       }
       for(int i =0; i<m; i++){
-         String str = br.readLine();
-         for(String sgroup : S){
-            if(str.equals(sgroup)){
-               cnt ++;
-            }
-         }
+         if(set.contains(br.readLine())) cnt ++;
       }
+
+
       System.out.println(cnt);
    }
 }

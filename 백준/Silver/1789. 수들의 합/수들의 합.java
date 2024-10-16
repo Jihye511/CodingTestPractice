@@ -1,22 +1,20 @@
-import java.util.*;
 import java.io.*;
-
+import java.util.*;
 public class Main{
-    static Long S;
-    public static void main(String[] args)throws IOException{
+
+    static long S,N;
+    public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
         S = Long.parseLong(br.readLine());
-
-        int n =1;
-        while(true){
-            if(S>=n) {
-                S -= n;
-                n++;
-            }else{
+        long k=1;
+        long sum=0;
+        while (true){
+            sum+=k;
+            if(sum >S){
                 break;
             }
+            else k++;
         }
-        System.out.println(n-1);
+        System.out.println(k-1);
     }
 }

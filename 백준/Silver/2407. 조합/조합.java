@@ -1,28 +1,27 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.math.BigInteger;
-import java.util.StringTokenizer;
+import java.util.*;
+
 
 public class Main {
-
+    static int n,m;
+    static BigInteger[][] dp;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine(), " ");
-        int n = Integer.parseInt(st.nextToken());
-        int m = Integer.parseInt(st.nextToken());
-        BigInteger[][] dp = new BigInteger[101][101];
-
-        for(int i = 1; i <= n; i++){
-            for(int j = 0; j<= i; j++){
-                if(j == 0 || i == j){
-                    dp[i][j] = new BigInteger(String.valueOf(1));
-                }else{
-                    dp[i][j] = dp[i-1][j-1].add(dp[i-1][j]);
-                }
-            }
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+        dp = new BigInteger[n+1][m+1];
+        System.out.println(combi(n,m));
+    }
+    public static BigInteger combi(int N,int M){
+        if(N == M || M ==0){
+            return BigInteger.ONE;
         }
-
-        System.out.println(dp[n][m]);
+       if(dp[N][M] !=null){
+            return dp[N][M];
+        }
+       dp[N][M] = combi(N-1,M-1).add(combi(N-1,M));
+        return dp[N][M];
     }
 }

@@ -1,34 +1,37 @@
-import java.util.*;
 import java.io.*;
+import java.math.BigInteger;
+import java.util.*;
 
-public class Main{
-    static int N;
-    static long[] arr, sum;
-    static StringBuilder sb = new StringBuilder();
-    public static void main(String[] args) throws IOException{
-        BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
+
+public class Main {
+    static int n;
+    static int[] rock;
+    static long[] dp;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
 
-        N = Integer.parseInt(br.readLine());
-        arr = new long[N+1];
-        sum = new long[N+1];
-
+        n = Integer.parseInt(br.readLine());
+        rock = new int[n+1];
+        dp = new long[n+1];
         st = new StringTokenizer(br.readLine());
-        for(int i =1; i<=N; i++){
-            arr[i] = Integer.parseInt(st.nextToken());
+        for(int i =1; i<=n; i++){
+            rock[i]= Integer.parseInt(st.nextToken());
         }
-
-        for(int j=2; j<N+1; j++){
-            sum[j] = Integer.MAX_VALUE;
-            for(int i =1; i<j; i++){
-                long max = cal(i,j,arr[i],arr[j]);
-                max = Math.max(max, sum[i]); //k 최대 뽑고
-                sum[j] = (int) Math.min(sum[j],max);  //그 최대 가장 작게 나오는 값을 저장
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        dp[1] = 0;
+        for(int i =1; i<n; i++){
+            for(int j =i+1; j<=n;j++){
+                long power = getPower(i,j);
+                dp[j] = Math.min(dp[j],Math.max(dp[i], power));
             }
+
         }
-        System.out.println(sum[N]);
+        System.out.println(dp[n]);
     }
-    public static long cal(int i, int j, long a, long b){
-        return (j-i)*(1+Math.abs(a-b));
+    public static long getPower(int i, int j){
+        return (long)(j-i) * (1+ Math.abs(rock[i]-rock[j]));
     }
+
+
 }

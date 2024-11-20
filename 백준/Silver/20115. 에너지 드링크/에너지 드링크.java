@@ -1,24 +1,26 @@
-import java.util.*;
 import java.io.*;
+import java.sql.PreparedStatement;
+import java.util.*;
 
-public class Main{
+public class Main {
     static int n;
-    static Integer[] amount;
+    static long[] amount;
+    static float max;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
         n = Integer.parseInt(br.readLine());
-        amount = new Integer[n];
+        amount = new long[n];
         StringTokenizer st = new StringTokenizer(br.readLine());
         for(int i =0; i<n; i++){
-            amount[i] = Integer.parseInt(st.nextToken());
+            amount[i] = Long.parseLong(st.nextToken());
         }
-        Arrays.sort(amount, Collections.reverseOrder());
-        long before=0;
-        double sum=amount[0];
-        for(int i =1; i<n; i++){
-            sum += (double)amount[i]/2;
+        Arrays.sort(amount);
+
+        max = amount[n-1];
+        for(int i =0; i<n-1; i++){
+            max =((float)amount[i]/2 +max);
         }
-        System.out.println(sum);
+        System.out.println(max);
+
     }
 }

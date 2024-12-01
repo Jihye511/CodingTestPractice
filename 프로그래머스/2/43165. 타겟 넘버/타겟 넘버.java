@@ -1,29 +1,18 @@
-import java.io.*;
-import java.util.*;
 class Solution {
-    static int[] number;
-    static int targetnum;
-    static int answer = 0;
-    static int sum=0;
+    static int cnt=0;
     public int solution(int[] numbers, int target) {
-        number = numbers;
-        targetnum = target;
-        
-        dfs(0, 0);
-        return answer;
+        int answer = 0;
+        dfs(numbers,0,0,target);
+        return cnt;
     }
-    public static void dfs(int num, int sum){
-        if(num == number.length){
-            if(sum == targetnum){
-                answer +=1;
-                return;
+    public static void dfs(int[] numbers,int depth, int hap, int target){
+        if(depth==numbers.length){
+            if(hap == target){
+                cnt+=1;
             }
-            
-        }else{
-            dfs(num+1 , sum + number[num]);
-            dfs(num+1 , sum - number[num]);
+            return;
         }
-        
-        
+        dfs(numbers, depth+1, hap+numbers[depth],target);
+        dfs(numbers, depth+1, hap-numbers[depth], target);
     }
 }

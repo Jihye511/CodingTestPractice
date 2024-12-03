@@ -1,51 +1,35 @@
 import java.io.*;
 import java.util.*;
+
 class Solution {
-    static int num;
-    static int[][] node;
-    static int cnt;
     static boolean[] visited;
-    static ArrayList<Integer>[] list;
+    static int cnt=0;
     public int solution(int n, int[][] computers) {
-        num = n;
-        node = computers;
-        visited = new boolean[n];
-        // list = new ArrayList[n];
-        // for(int i =0; i<n; i++){
-        //     list[i] = new ArrayList<>();
-        // }        
-        // for(int i =0; i<n; i++){
-        //     for(int j =0; j<n ; j++){
-        //         if(i !=j && node[i][j] ==1){
-        //             list[i].add(j);
-        //             list[j].add(i);
-        //         }
-        //     }
-        // }
-        
+        int answer = 0;
+        visited = new boolean[n+1];
         for(int i =0; i<n; i++){
             if(!visited[i]){
-                dfs(i);
-                cnt++;
+                visited[i] =true;
+                answer += bfs(i, computers, n);
             }
         }
-      
-        return cnt;
+
+        return answer;
     }
-    public static void dfs(int now){
-        visited[now] = true;
-        for(int i =0; i<num; i++){
-            if(!visited[i] && node[now][i] ==1){
-                dfs(i);
+    public static int bfs(int node, int[][] computers, int n){
+        Queue<Integer> q = new LinkedList<>();
+        q.offer(node);
+        while(!q.isEmpty()){
+            int cur = q.poll();
+            for(int i =0; i<n; i++){
+                if(computers[cur][i]==1 && cur !=i){
+                    if(!visited[i]){
+                        visited[i] = true;
+                        q.offer(i);
+                    }
+                }
             }
         }
-        // for(int i =0; i<list[now].size(); i++){
-        //     int next = list[now].get(i);
-        //     if(!visited[next]){
-        //         visited[next] =true;
-        //         dfs(next); 
-        //     }
-        // }
-    
+        return 1;
     }
 }

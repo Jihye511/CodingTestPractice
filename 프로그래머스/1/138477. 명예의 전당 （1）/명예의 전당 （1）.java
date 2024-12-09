@@ -7,6 +7,7 @@ class Solution {
         for(int i =0; i<score.length; i++){
             if(q.size()<k){
                 q.offer(score[i]);
+                
             }else{
                 if(q.peek()<= score[i]){
                     q.poll();

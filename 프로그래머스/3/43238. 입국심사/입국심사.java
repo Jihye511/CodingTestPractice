@@ -1,33 +1,23 @@
-import java.io.*;
-import java.util.*;
+import java.util.Arrays;
 class Solution {
     public long solution(int n, int[] times) {
         long answer = 0;
         Arrays.sort(times);
-        answer = binarySearch(n, times);
-        return answer;
-    }
-    public long binarySearch(int n, int[] times){
-        long start =0;
-        long end = times[times.length-1] * (long)n;
-        long result =0;
-        while(start <= end){
-            long mid = (start +end)/2;
-            if(timeCheck(times, n,mid)){
-                result = mid;
-                end = mid-1;
-            }else{
-                start = mid+1;
+        long left = 0;
+        long right = times[times.length-1] * (long)n; //모든 사람이 가장 느리게 심사받음
+        
+        while(left <= right) {
+            long mid = (left + right) / 2;
+            long complete = 0;
+            for (int i = 0; i < times.length; i++)
+                complete += mid / times[i];
+            if (complete < n) 
+                left = mid + 1;
+            else {
+                right = mid - 1;
+                answer = mid;
             }
-        }
-        return result;
-    }
-    public boolean timeCheck(int[] times, int n,long mid){
-        long people = 0;
-        for(int i =0; i<times.length; i++){
-            people += mid/times[i];
-        }
-        //people이 n 보다 크면 true
-        return people>=n;
+        }  
+        return answer;
     }
 }

@@ -1,39 +1,43 @@
-import java.util.*;
+
 import java.io.*;
+import java.util.*;
 
-public class Main{
-    static int n,s;
-    static int[] value;
-    static int cnt;
-    public static void main(String[]args)throws IOException{
+public class Main {
+    static int N,S;
+    static int[] num;
+    static int ans=0;
+    public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+        StringTokenizer st= new StringTokenizer(br.readLine());
 
-        n = Integer.parseInt(st.nextToken());
-        if(n<1 || n>20){
-            return;
+        N = Integer.parseInt(st.nextToken());
+        S = Integer.parseInt(st.nextToken());
+
+        num = new int[N];
+        st= new StringTokenizer(br.readLine());
+        for(int i =0; i<N; i++){
+            num[i] =Integer.parseInt(st.nextToken());
         }
-        s = Integer.parseInt(st.nextToken());
-        value = new int[n];
-        st = new StringTokenizer(br.readLine());
-        for(int i =0; i<n; i++){
-            value[i] = Integer.parseInt(st.nextToken());
-        }
-        dfs(0,0);
-        if(s ==0){
-            System.out.println(cnt-1);
+        dfs(0,0,0);
+        if(S ==0){
+            System.out.println(ans-1);
         }else{
-            System.out.println(cnt);
+            System.out.println(ans);
         }
+
+
     }
-    public static void dfs(int index,int sum){
-        if(index ==n){//모든 인덱스 확인했다면
-            if(sum == s){
-                cnt +=1;
+    public static void dfs(int idx, int hap,int cnt){
+        if(idx==N){
+            if(hap == S){
+                ans++;
+
             }
             return;
         }
-        dfs(index+1, sum+value[index]); //현재 원소 선택
-        dfs(index+1,sum);   //현재 원소 선택 x
+
+
+        dfs(idx+1, hap+num[idx], cnt+1);
+        dfs(idx+1,hap,cnt);
     }
 }

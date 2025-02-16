@@ -3,20 +3,30 @@ import java.io.*;
 
 class Solution {
     boolean solution(String s) {
-        boolean answer = true;
-        // 배열로 쪼개기
-        int cnt=0;
-        char[] c = s.toCharArray();
-        if(c[0] =='(' && c[c.length-1] ==')'){
-            for(int i =0; i<c.length; i++){
-                if(c[i] =='(') cnt ++;
-                else if(c[i]==')') cnt --;
-                
-                if(cnt<0) answer =false;
-            } 
-            if(cnt != 0) answer = false;
-        }else answer = false;
+        Queue<Character> q =new LinkedList<>();
+        char[] ch = new char[s.length()];
+        for(int i =0; i<s.length(); i++){
+            ch[i] = s.charAt(i);
+            q.offer(ch[i]);
+        }
+        if(q.peek() ==')') return false;
+        boolean check=false;
+        int num=0;
+        while(!q.isEmpty()){
+            char c = q.poll();
+            if(c =='('){
+                num +=1;
+            }else{
+                num-=1;
+            }
+            
+            if(num<0) return false;
+            
+            
+        }
+        if(num ==0) return true;
+        else return false;
         
-        return answer;
+      
     }
 }

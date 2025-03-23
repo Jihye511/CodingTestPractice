@@ -2,30 +2,25 @@ import java.io.*;
 import java.util.*;
 class Solution {
     public int[] solution(int[] prices) {
+        int[] answer = new int[prices.length];
         Queue<Integer> q = new LinkedList<>();
-        for(int i =0; i<prices.length; i++){
-            q.offer(prices[i]);
+        for(int val: prices){
+            q.offer(val);
         }
-        ArrayList<Integer> list = new ArrayList<>();
-        while(!q.isEmpty()){
+        for(int i =0; i<prices.length;i++){
             int cur = q.poll();
-            int cnt=0;
-            for(int v : q){
-                if(cur>v) {
-                    cnt++;
+            int count =0;
+            for(int n : q){
+                count++;
+                if(cur>n){
                     break;
                 }
-                else{
-                    cnt++;
-                }
             }
-            list.add(cnt);
+            answer[i] = count;
             
         }
-         int[] ans = new int[prices.length];
-        for(int i =0; i<list.size(); i++){
-            ans[i] = list.get(i);
-        }
-        return ans;
+        
+        
+        return answer;
     }
 }

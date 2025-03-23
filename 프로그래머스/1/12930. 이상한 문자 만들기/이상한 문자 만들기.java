@@ -1,23 +1,26 @@
 import java.io.*;
 class Solution {
     public String solution(String s) {
-        StringBuilder sb = new StringBuilder();
-        int idx=0;
-        for(int i =0;i<s.length(); i++){
-             char ch = s.charAt(i);
-            if(ch==' '){
-                idx =0;
-                sb.append(ch);
+        String ans="";
+        char[] c =new char[s.length()];
+        boolean check = false;
+        for(int i =0; i<s.length(); i++){
+            c[i] = s.charAt(i);
+            if(c[i]==' '){
+                ans += c[i];
+                check =false;
                 continue;
-            }else if(idx %2 ==0){
-                sb.append(Character.toUpperCase(ch));
-                idx++;
-            }else{
-                sb.append(Character.toLowerCase(ch));
-                idx++;
             }
+            else if(!check){
+                //짝수(false)면 대문자
+                ans += Character.toUpperCase(c[i]);
+            }else{
+                //소문자
+                ans += Character.toLowerCase(c[i]);
+                
+            }
+            check = !check;
         }
-        
-        return sb.toString();
+        return ans;
     }
 }

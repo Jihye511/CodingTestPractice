@@ -1,50 +1,57 @@
 import java.io.*;
 import java.util.*;
-class Pair{
-    int start;
-    int time;
-    public Pair(int start, int time){
+class Task{
+    int time,start,id;
+    public Task(int time, int start, int id){
+        this.time =time;
         this.start = start;
-        this.time = time;
+        this.id = id;
     }
 }
 class Solution {
     public int solution(int[][] jobs) {
         int answer = 0;
-        int nowTime =0; //현재 시간
-        int sum=0;      //전체 대기 시간 합
-        
-        Arrays.sort(jobs,(a,b) -> a[0]-b[0]);
-        //작업 시간 기준 오름차순 정렬
-        PriorityQueue<Pair> pq = new PriorityQueue<>((a,b) -> a.time - b.time);
-
-
-        int jobIndex = 0; // jobs 배열 인덱스
-        int count = 0; // 완료된 작업 수
-        
-
-        while(count < jobs.length){
-            //하나의 작업이 완료되는 시점까지 들어온 모든 요청을 큐에 넣음
-            while(jobIndex < jobs.length && jobs[jobIndex][0] <= nowTime){
-                pq.offer(new Pair(jobs[jobIndex][0], jobs[jobIndex][1]));
-                jobIndex ++;
-            }
-            
-            if(!pq.isEmpty()){
-                Pair cur = pq.poll();
-                nowTime += cur.time;
-                sum += (nowTime - cur.start);
-                count++;
-                
-            }else{
-                nowTime = jobs[jobIndex][0];
-            }
-                
+        PriorityQueue<Task> pq = new PriorityQueue<>((a,b)->a.start - b.start); //시작 시간 순 정렬
+        PriorityQueue<Task>  waitingPq= new PriorityQueue<>((a,b) -> {
+            if(a.time ==b.time) return a.start - b.start;
+            else return a.time - b.time;}); //소요시간 기준 정렬하는 대기 큐
+        for(int i = 0; i<jobs.length; i++){
+            int start = jobs[i][0];
+            int time = jobs[i][1];
+            pq.offer(new Task(time, start, i));
         }
-            
         
-    
-        answer = sum /jobs.length;
-        return answer;
+        int cnt=0;//현재 진행 시간
+        int[] workingtime = new int[jobs.length];
+        //컨트롤러 돌리기
+        while(true){
+                if(pq.isEmpty() && waitingPq.isEmpty()) break;
+                //for문 돌려서 시간에 해당되는애들 넣기
+                int size= pq.size();
+                for(int i =0; i<size; i++){
+                    Task cur = pq.poll();   
+                    if(cur.start<=cnt){
+                        waitingPq.offer(cur);
+                    }else{
+                        pq.offer(cur);
+                        break;
+                    }
+                }
+                if(waitingPq.isEmpty()){
+                    cnt++;
+                    continue;
+                }
+                Task cur = waitingPq.poll();
+                
+                cnt += cur.time;
+                workingtime[cur.id] = cnt - cur.start; 
+            }
+            int hap=0;
+        for(int v : workingtime){
+            hap +=v;
+        }
+        return (int)(hap/jobs.length);
+            
     }
+        
 }

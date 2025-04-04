@@ -3,33 +3,33 @@ import java.util.*;
 class Solution {
     public int[] solution(int[] answers) {
         
-        int[][] student = {{1,2,3,4,5},
-                           {2,1,2,3,2,4,2,5},
-                           {3,3,1,1,2,2,4,4,5,5}
-                           };
-        int[] ans = new int[3];
-        for(int i= 0; i<answers.length; i++){
-            for(int j =0; j<3; j++){
-                if(answers[i] == student[j][i%student[j].length]){
-                    ans[j]++;
-                }
-            }
+        int[] p1 = {1,2,3,4,5};
+        int[] p2 = {2,1,2,3,2,4,2,5};
+        int[] p3 = {3,3,1,1,2,2,4,4,5,5};
+        
+        int[] correct = new int[4];
+        for(int i =0; i<answers.length; i++){
+            if( answers[i] ==p1[i%p1.length]) correct[1]++;
+            if(answers[i]==p2[i%p2.length]) correct[2]++;
+            if(answers[i]==p3[i%p3.length]) correct[3]++;
+        }
+        int max = 0;
+        for(int i : correct){
+            max = Math.max(max, i);
         }
         ArrayList<Integer> list = new ArrayList<>();
-        int max =-1;
-        for(int i: ans){
-            max= Math.max(i,max);
-        }
-        for(int i=0; i<3; i++){
-            if(max == ans[i]){
-                list.add(i+1);
+        for(int i =1; i<4; i++){
+            if(max == correct[i]){
+                list.add(i);
             }
         }
-        Collections.sort(list);
+        
+        
         int[] answer = new int[list.size()];
-        for(int n=0; n<list.size(); n++){
-            answer[n] = list.get(n);
+        for(int i =0; i<list.size(); i++){
+            answer[i] = list.get(i);
         }
+        
         return answer;
     }
 }

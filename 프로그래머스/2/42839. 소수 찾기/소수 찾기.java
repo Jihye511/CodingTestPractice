@@ -1,41 +1,45 @@
 import java.io.*;
 import java.util.*;
-
 class Solution {
-    static boolean[] visited;
-    static char[] c;
     static HashSet<Integer> hash = new HashSet<>();
     public int solution(String numbers) {
         int answer = 0;
-        c = numbers.toCharArray();
-        visited = new boolean[c.length];
-        // for(int i=0; i<numbers.length(); i++){
-        //     int num = Integer
-        // }
-        dfs("",0);
-        answer = hash.size();
-        return answer;
-    }
-    public static void dfs(String str , int idx){
-        int num;
-        if(str !=""){
-            num = Integer.parseInt(str);
-            if(checkNum(num)) hash.add(num);
+        char [] ch = new char[numbers.length()];
+        for(int i =0; i<numbers.length(); i++){
+            ch[i] = numbers.charAt(i);
         }
-        if(idx==c.length) return;
-        for(int i =0; i<c.length;i++){
-            if(!visited[i]){
-                visited[i] = true;
-                dfs( str + c[i], idx+1);
-                visited[i]=false;
+        for(int i =1; i<=numbers.length(); i++){
+            boolean[] v = new boolean[numbers.length()];
+            dfs("", ch, i, 0, v);
+        }
+        
+        return hash.size();
+    }
+    
+    public static boolean checknum(int num){
+        if(num ==1 || num==0) return false;
+        for(int i =2; i<num; i++){
+            if(num%i ==0){
+                return false;
             }
         }
-    }
-    public static boolean checkNum(int num){
-        if(num==0||num==1) return false;
-        for(int i=2; i*i<=num; i++){
-            if(num%i ==0) return false;
-        }
         return true;
+    }
+    public static void dfs(String str, char[] ch, int depth, int length, boolean[] v){
+        if(str !=""){
+            int n = Integer.parseInt(str);
+            if(checknum(n)){
+                hash.add(n);    
+            }
+            
+        }
+        
+        for(int i =0; i<ch.length;i++){
+            if(!v[i]){
+                v[i] = true;
+                dfs(str+ch[i],ch, depth+1, length, v);
+                v[i] = false;
+            }
+        }
     }
 }

@@ -1,51 +1,62 @@
 import java.io.*;
 import java.util.*;
 class Solution {
-    
-    static ArrayList<Integer>[] node;
-    static boolean[] visited;
+    static ArrayList<Integer>[] list;
     public int solution(int n, int[][] wires) {
-        int answer = -1;
-        node = new ArrayList[n+1];
-        for(int i =0; i<=n; i++){
-            node[i] = new ArrayList<>();
+        int answer = Integer.MAX_VALUE;
+        list = new ArrayList[n+1];
+        for(int i =1; i<=n; i++){
+            list[i] = new ArrayList<>();
         }
-        for(int i =0; i<wires.length; i ++){
+        for(int i=0; i<wires.length; i++){
             int a = wires[i][0];
             int b = wires[i][1];
-            node[a].add(b);
-            node[b].add(a);
+            
+            list[a].add(b);
+            list[b].add(a);
         }
-        //완탐 
-        int min=Integer.MAX_VALUE;
-        for(int[] now : wires){
-            int a = now[0];
-            int b = now[1];
-            
-            node[a].remove((Integer)b);
-            node[b].remove((Integer)a);
-            
-            visited = new boolean[n+1];
-            int count = dfs(a);
-            
-            int count_B = n - count;
-            
-            min = Math.min(min, Math.abs(count - count_B));
-            node[a].add(b);
-            node[b].add(a);
+        for(int i =1; i<=n; i++){
+            Collections.sort(list[i]);
         }
-        answer = min;
+        
+        int size = wires.length;
+        for(int i=1; i<=size; i++){
+            int getsize = list[i].size();
+            for(int j=0; j<getsize; j++){
+                int other = list[i].get(j);
+                list[i].remove(Integer.valueOf(other));
+                list[other].remove(Integer.valueOf(i));
+                answer = Math.min(bfs(n), answer);
+                list[i].add(other);
+                list[other].add(i);
+                
+                for(int k =1; k<=n; k++){
+                    Collections.sort(list[k]);
+                }
+            }    
+        }
         
         return answer;
     }
-    public static int dfs(int n){
-        visited[n] = true;
-        int cnt = 1;
-        for(int next : node[n]){
-            if(!visited[next]){
-                cnt += dfs(next);
+    public static int bfs(int n){
+        Queue<Integer> q = new LinkedList<>();
+        q.offer(1);
+        boolean[] v = new boolean[n+1];
+        v[1] = true;
+        int cnt=1;
+        while(!q.isEmpty()){
+            int cur = q.poll();
+            for(int i =0; i<list[cur].size(); i++){
+                int next = list[cur].get(i);
+                if(!v[next]){
+                    v[next] = true;
+                    q.offer(next);
+                    cnt++;
+                }
+                
             }
         }
-        return cnt;
+        int cnt_other = n - cnt;
+        return Math.abs(cnt_other - cnt);
     }
 }

@@ -1,16 +1,28 @@
 import java.io.*;
 import java.util.*;
 class Solution {
-    static Integer[] peopleInteger;
     public int solution(int[] people, int limit) {
         int answer = 0;
         Arrays.sort(people);
-        int min=0;
-        for(int max = people.length-1; max>=min; max--){
-            if(people[min] + people[max] <=limit) min++;
-            answer++;
+        boolean[] v = new boolean[people.length];
+        int start = 0;
+        int end = people.length - 1;
+        while(start<end){
+            if(people[start] + people[end] <= limit){
+                answer++;
+                v[start] = v[end] = true;
+                start ++;
+                end --;
+            }
+            else{
+                end--;
+            }
         }
+        for(boolean i : v){
+            if(i == false) answer ++;
+        }
+        
         return answer;
     }
- 
+
 }

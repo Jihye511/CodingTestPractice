@@ -1,21 +1,27 @@
 import java.io.*;
 import java.util.*;
+
 class Solution {
+    static int [] num;
     public String solution(String number, int k) {
         StringBuilder sb = new StringBuilder();
-        String answer = "";
-     
-        int idx=0;
-        int max;
-        for(int i=0; i<number.length() - k; i++){
-            max = 0;
-            for(int j =idx; j<=k+i; j++){
-                if(max<number.charAt(j)-'0'){
-                    max = number.charAt(j) - '0';
-                    idx = j+1;
-                }
+        
+        Stack<Integer> stack = new Stack<>();
+        for(int i =0; i<number.length(); i++){
+            int cur = number.charAt(i)-'0';
+            while(!stack.isEmpty() && k>0 && stack.peek()<cur){
+                stack.pop();
+                k--;
             }
-            sb.append(max);
+            stack.add(cur);
+        }
+        
+        while(k-->0){
+            stack.pop();
+        }
+        
+        for(int s : stack){
+            sb.append(s);
         }
         
         return sb.toString();

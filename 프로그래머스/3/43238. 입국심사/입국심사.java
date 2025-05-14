@@ -1,23 +1,34 @@
-import java.util.Arrays;
+import java.io.*;
+import java.util.*;
 class Solution {
     public long solution(int n, int[] times) {
         long answer = 0;
         Arrays.sort(times);
-        long left = 0;
-        long right = times[times.length-1] * (long)n; //모든 사람이 가장 느리게 심사받음
+        answer = binary(n, times);
+    
         
-        while(left <= right) {
-            long mid = (left + right) / 2;
-            long complete = 0;
-            for (int i = 0; i < times.length; i++)
-                complete += mid / times[i];
-            if (complete < n) 
-                left = mid + 1;
-            else {
-                right = mid - 1;
-                answer = mid;
-            }
-        }  
         return answer;
+    }
+    public static long binary(int n, int[] times){
+        long lo = 1;
+        long hi = (long)times[0] * (long)n;
+        while(lo<hi){
+            long mid = (hi-lo)/2 + lo;
+            
+            if(countNum(mid, times)>=n){
+                hi = mid;
+            }
+            else{ 
+                lo = mid+1;
+            }
+        }
+        return lo;
+    }
+    public static long countNum(long time, int[] times){
+        long cnt=0;
+        for(int i =0;i<times.length; i++){
+            cnt += time/times[i];
+        }
+        return cnt;
     }
 }

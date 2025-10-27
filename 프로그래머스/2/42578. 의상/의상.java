@@ -2,16 +2,19 @@ import java.io.*;
 import java.util.*;
 class Solution {
     public int solution(String[][] clothes) {
-        int answer = 1;
-        //HashMap 넣기
-        HashMap<String,Integer> pair = new HashMap<>();
-       
-        for(int i =0; i<clothes.length; i++){
-            pair.put(clothes[i][1], pair.getOrDefault(clothes[i][1],1)+1);
+        int answer = 0;
+        HashMap<String, Integer> map = new HashMap<>();
+        HashSet<String> set = new HashSet<>();
+        for(int i =0;i<clothes.length; i++){
+            map.put(clothes[i][1],map.getOrDefault(clothes[i][1],0)+1);
+            set.add(clothes[i][1]);
         }
-        for(Integer val : pair.values()){
-            answer = answer *val;
+        int cnt=1;
+        for (String key : set) {
+            int n = map.get(key);
+            cnt *= (n + 1);
         }
-        return answer-1;
+        answer = cnt-1;
+        return answer;
     }
 }

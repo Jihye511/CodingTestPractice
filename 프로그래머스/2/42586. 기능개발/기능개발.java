@@ -2,36 +2,32 @@ import java.io.*;
 import java.util.*;
 class Solution {
     public int[] solution(int[] progresses, int[] speeds) {
+        int[] answer;
+        Queue<Integer> q = new LinkedList<>();
+        int days = (100 - progresses[0])/speeds[0];
+        if((100 - progresses[0]) %speeds[0] !=0){
+            days++;
+        }
+        ArrayList<Integer> list= new ArrayList<>();
+        int cnt =1;
+        for(int i =1; i<progresses.length; i++){
+            int tempDay = (100 - progresses[i])/speeds[i];
+            if((100 - progresses[i]) % speeds[i]!=0) tempDay++;
+            if(tempDay <=days){
+                cnt++;
+            }else{
+                list.add(cnt);
+                cnt =1;
+                days = tempDay;
+            }
+        }
+    
+        list.add(cnt);
         
-        Queue<int[]> q = new LinkedList<>();
-        for(int i=0; i<progresses.length; i++){
-            q.offer(new int[] {progresses[i], speeds[i]});
-        }
-        ArrayList<Integer> list = new ArrayList<>();
-        int before = 0;
-        int before_day=0;
-        while(!q.isEmpty()){
-            int[] cur = q.poll();
-            int extra = 100- cur[0]; // 남은 퍼센트
-            int days;
-            if(extra %cur[1] == 0){
-                days = extra /cur[1];
-            }else{
-                days = extra /cur[1] +1;
-            }
-            //앞에 days보다 작으면 묻어가기
-            if(before>=days){
-                before_day++;
-            }else{
-                list.add(before_day);
-                before_day = 1;
-                before = days;
-            }
-        }
-        list.add(before_day);
-        int[] answer = new int[list.size()-1];
-        for(int i =1; i<list.size(); i++){
-            answer[i-1] = list.get(i);
+        
+        answer = new int[list.size()];
+        for(int i =0; i<list.size(); i++){
+            answer[i] = list.get(i);
         }
         return answer;
     }

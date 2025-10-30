@@ -1,53 +1,31 @@
 import java.io.*;
 import java.util.*;
+
 class Solution {
+
     public int solution(int[] priorities, int location) {
-//         Queue<int[]> pq = new PriorityQueue<>((a, b)->{
-//             if(a[0]==b[0]) return a[1]-b[1];
-//             else return b[0]-a[0];
-//         }); 
-        
+        int answer = 0;
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a,b)-> b[1] - a[1]);
         Queue<int[]> q = new LinkedList<>();
-        ArrayList<Integer> list = new ArrayList<>();
-        
         for(int i =0; i<priorities.length; i++){
-            q.offer(new int[]{priorities[i],i});
-            // pq.offer(new int[]{priorities[i],i});
-            list.add(priorities[i]);
+            q.offer(new int[]{i,priorities[i]});
+            pq.offer(new int[]{i, priorities[i]});
         }
-        Collections.sort(list, Collections.reverseOrder());
-        
-        int cnt=1;
+        int idx =0;
         while(!q.isEmpty()){
             int[] cur = q.poll();
-            
-            if(cur[0] == list.get(0)){
-                if(cur[1] == location){
-                    break;
-                }
-                list.remove(0);
-                cnt++;
-            }else {
-                q.offer(new int[]{cur[0],cur[1]});
+            int[] max = pq.poll();
+            if(cur[1] == max[1]){
+                idx++;
+                if(cur[0] == location) {
+                answer = idx;
+                break;
             }
-            
+            }else{
+                q.offer(new int[]{cur[0], cur[1]});
+                pq.offer(new int[]{max[0],max[1]});
+            }
         }
-        
-        
-        // Collections.sort(q,)
-        // int[] n = new int[priorities.length];
-        // int idx=0;
-        // for(int[] v: pq){
-        //     n[idx] =v[1];
-        //     idx++;
-        // }
-//         for(int i=0; i<priorities.length;i++){
-//             int[] cur=pq.poll();
-//             if(cur[1] == location){
-//                 return i+1;
-//             }
-//         }
-        
-        return cnt;
+        return answer;
     }
 }

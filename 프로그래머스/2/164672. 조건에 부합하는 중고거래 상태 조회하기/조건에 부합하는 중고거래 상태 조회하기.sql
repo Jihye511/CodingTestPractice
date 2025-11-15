@@ -1,8 +1,8 @@
 -- 코드를 입력하세요
-SELECT BOARD_ID, WRITER_ID, TITLE, PRICE,  CASE STATUS
-                                                 WHEN 'SALE' THEN "판매중"
-                                                 WHEN 'RESERVED' THEN "예약중"
-                                                 WHEN 'DONE' THEN "거래완료" END AS STATUS
-FROM USED_GOODS_BOARD
-WHERE YEAR(CREATED_DATE) = 2022 AND MONTH(CREATED_DATE) = 10 AND DAY(CREATED_DATE) = 5
-ORDER BY BOARD_ID DESC
+SELECT BOARD_ID, WRITER_ID, TITLE, PRICE, case when status = 'DONE' then '거래완료'
+                                                when status ='SALE' then '판매중'
+                                                else '예약중' end as status
+
+from used_goods_board
+where year(created_date) = 2022 and month(created_date) = 10 and day(created_date) =5
+order by BOARD_ID desc

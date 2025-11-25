@@ -1,52 +1,51 @@
 import java.io.*;
 import java.util.*;
 
-public class Main{
+public class Main {
     static int N,M;
     static ArrayList<Integer>[] list;
-    static int[] indegree;
+    static int[] cnt;
     static StringBuilder sb = new StringBuilder();
-    public static void main(String[] args)throws IOException{
+
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
         list = new ArrayList[N+1];
-        indegree = new int[N+1];
-        for(int i =0; i<=N; i++){
+        cnt = new int[N+1];
+        for (int i = 1; i <= N; i++) {
             list[i] = new ArrayList<>();
         }
         for(int i =0; i<M; i++){
             st = new StringTokenizer(br.readLine());
-            int pre = Integer.parseInt(st.nextToken());
-            int num = Integer.parseInt(st.nextToken());
-
-            list[pre].add(num);
-            indegree[num]++;
+            int A =Integer.parseInt(st.nextToken());
+            int B =Integer.parseInt(st.nextToken());
+            list[A].add(B);
+            cnt[B]++;
         }
-        line();
-    }
+        bfs();
+        System.out.println(sb);
 
-    public static void line() {
-        Queue<Integer> q = new ArrayDeque<>();
-        for (int i = 1; i < N + 1; i++) {
-            if (indegree[i] == 0) {
+    }
+    public static void bfs(){
+        Queue<Integer> q = new LinkedList<>();
+        for(int i =1; i<=N; i++){
+            if(cnt[i]==0){
                 q.offer(i);
             }
         }
-        while (!q.isEmpty()){
-            int current = q.poll();
-            sb.append(current).append(" "); //현재값 sb에 저장
-            for(int j = 0; j<list[current].size(); j++){
-                int next = list[current].get(j);
-                indegree[next] --;
-                if(indegree[next] ==0){
+        while(!q.isEmpty()){
+            int cur = q.poll();
+            sb.append(cur).append(" ");
+            for(int i =0; i<list[cur].size(); i++){
+                int next = list[cur].get(i);
+                cnt[next]--;
+                if(cnt[next]==0){
                     q.offer(next);
                 }
-
             }
         }
-        System.out.println(sb);
     }
 }

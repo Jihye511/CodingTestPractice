@@ -1,89 +1,57 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.StringTokenizer;
-public class Main{
-    static int[] lights;
-    static int n;
+import java.io.*;
+import java.util.*;
 
-    public static void main(String[] args) throws IOException{
+public class Main {
 
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
-
-         n= Integer.parseInt(br.readLine());
-         lights = new int[n+1];
-
-
-        st = new StringTokenizer(br.readLine());
-        for (int i =1; i<=n; i++){
-            lights[i] = Integer.parseInt(st.nextToken());
+        int N = Integer.parseInt(br.readLine());
+        boolean[] button = new boolean[N+1];
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        for(int i =1; i<=N; i++){
+            int input = Integer.parseInt(st.nextToken());
+            if(input ==1) button[i] = true;
+            else button[i] =false;
         }
-
-        //학생수
-        int student = Integer.parseInt(br.readLine());
-
-        for (int i =0; i<student; i++){
-
+        int stuN = Integer.parseInt(br.readLine());
+        for(int i =0; i<stuN; i++){
             st = new StringTokenizer(br.readLine());
-
-            int sex = Integer.parseInt(st.nextToken());
+            int student = Integer.parseInt(st.nextToken());
             int number = Integer.parseInt(st.nextToken());
-
-            if(sex ==1){
-                boy(number);
-            }
-            else if(sex ==2){
-                girl(number);
-            }
-        }
-        //=출력
-        for(int i =1; i< lights.length; i ++){
-            System.out.print(lights[i] + " ");
-            if(i%20 == 0){
-                System.out.println();
-            }
-        }
-    }
-    public static void boy(int num){
-        int index = num;
-        while(index <lights.length) {
-            if (lights[index] == 0) {
-                lights[index] = 1;
-
-            }else if(lights[index]==1) {
-                lights[index] = 0;
-            }
-            index+=num;
-        }
-
-    }
-
-    public static void girl(int num){
-        if (lights[num] == 0) {
-            lights[num] = 1;
-
-        }else if(lights[num]==1) {
-            lights[num] = 0;
-        }
-        //대칭 스위치 반대로 변경
-        int count =1;
-        while ((num-count)> 0 && (num + count)<lights.length){
-            if(lights[num+count] == lights[num -count]){
-                if (lights[num+ count] ==0){
-                    lights[num +count] =1;
-                    lights[num - count] =1;
+            if(student == 1){
+                int multiple = number;
+                while(multiple <=N){
+                    button[multiple] = !button[multiple];
+                    multiple +=number;
                 }
-                else if (lights[num+ count] ==1){
-                    lights[num +count] =0;
-                    lights[num - count] =0;
+            }else{
+                button[number] = !button[number];
+
+                int temp =1;
+                while(number- temp>0 && number+temp <=N){
+                    int pre = number -temp;
+                    int pos = number +temp;
+                    if(button[pre] == button[pos]){
+                        button[pre] = !button[pre];
+                        button[pos] = !button[pos];
+                    }else break;
+
+                    temp++;
                 }
-               count++;
 
             }
-            else
-                break;
+        }
+        ArrayList<Integer> list = new ArrayList<>();
+        for(int i =1; i<=N; i++){
+            if(button[i]){
+                list.add(1);
+            }else list.add(0);
+        }
+        for(int i =0; i<list.size(); i++){
+            if(i !=0 && i%20==0) System.out.println();
+            System.out.print(list.get(i)+" ");
+
+        }
     }
-    }
+
 }

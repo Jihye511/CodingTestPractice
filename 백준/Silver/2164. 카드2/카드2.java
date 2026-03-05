@@ -1,27 +1,27 @@
+import javax.imageio.ImageTranscoder;
+import javax.swing.*;
 import java.io.*;
 import java.util.*;
-public class Main{
-    static int N;
-    static int result;
-    static Queue<Integer> q = new ArrayDeque<>();
-    public static void main(String[] args)throws IOException{
+
+public class Main {
+   public static void main(String[] args)throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        N = Integer.parseInt(br.readLine());
-
-        for(int i =0; i<N; i++){
-            q.offer(i+1);
+        int N = Integer.parseInt(br.readLine());
+        Queue<Integer> q = new LinkedList<>();
+        for(int i=1; i<=N; i++){
+            q.offer(i);
         }
-        while(!q.isEmpty()){
-            int cur = q.poll();
-            if(q.isEmpty()){
-                result = cur;
-                break;
+        boolean check = false;
+        while(q.size() !=1){
+            if(!check){
+                check = true;
+                q.poll();
+            }else{
+                check = false;
+                int n = q.poll();
+                q.offer(n);
             }
-            int next = q.poll();
-            q.offer(next);
-            result = next;
         }
-        System.out.println(result);
+        System.out.println(q.poll());
     }
-
 }

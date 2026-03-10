@@ -1,46 +1,61 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.StringTokenizer;
+import javax.imageio.ImageTranscoder;
+import javax.swing.*;
+import java.io.*;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Main {
-    static int N, X;
-    static int[] arr;
-    public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        N =Integer.parseInt(st.nextToken());
-        X =Integer.parseInt(st.nextToken());
-
-        arr = new int[N];
-        int hap =0;
-        st = new StringTokenizer(br.readLine());
-        for(int i =0; i<N; i++){
-            arr[i] = Integer.parseInt(st.nextToken());
-            if(i <X) hap+=arr[i];
+   public static void main(String[] args)throws IOException {
+       BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+       StringTokenizer st = new StringTokenizer(br.readLine());
+       int N = Integer.parseInt(st.nextToken());
+       int X =Integer.parseInt(st.nextToken());
+       st= new StringTokenizer(br.readLine());
+       int[] day=new int[N];
+       long max = 0;
+       for(int i =0; i<N; i++){
+           day[i]=Integer.parseInt(st.nextToken());
+           max =Math.max(max, day[i]);
+       }
+        if(max==0){
+            System.out.println("SAD");
+            return;
         }
+        long sum =0;
 
-        int max = hap;
-        int count = 1;
+        for(int i =0; i<X; i++){
+            sum+=day[i];
 
-        for (int i = X; i < N; i++) {
-            hap = hap - arr[i - X] + arr[i];
-
-            if (hap > max) {
-                max = hap;
-                count = 1;
-            } else if (hap == max) {
-                count++;
-            }
         }
-        StringBuilder sb = new StringBuilder();
-        if(hap ==0){
-            sb.append("SAD");
-        }else{
-            sb.append(max).append("\n");
-            sb.append(count);
+       long maxV = sum;
+        int end =X-1;
+        int start = 0;
+
+        while(end<N-1){
+            end++;
+            sum -=day[start];
+            sum +=day[end];
+            maxV = Math.max(sum, maxV);
+            start++;
         }
-        System.out.println(sb);
-    }
+        int cnt =0;
+
+        end = X;
+        start =0;
+        sum=0;
+       for(int i =0; i<X; i++){
+           sum+=day[i];
+       }
+       if(sum==maxV) cnt++;
+       while(end<N){
+           sum-=day[start];
+           sum +=day[end];
+           if(sum == maxV)cnt++;
+           start++;
+           end++;
+       }
+       System.out.println(maxV);
+       System.out.println(cnt);
+
+   }
 }

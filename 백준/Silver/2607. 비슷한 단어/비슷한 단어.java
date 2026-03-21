@@ -1,45 +1,44 @@
 import java.io.*;
 import java.util.*;
+
 public class Main {
-    static int N;
-    static String[] arr;
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    /*
+    비슷한 단어 조건
+    1. 두 문자의 구성(개수, 종류)가 모두 같을 떄
+    2. 한 단어에서 한 문자르 더하거나, 빼거나, 하나의 문자를 다른 문자로 바꾸었을 때 같게 되면
+     */
+   static int N;
+   static String input;
+   public static void main(String[] args)throws IOException {
+       BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+       N = Integer.parseInt(br.readLine());
+       input = br.readLine();
+       int len = input.length();
+       int ans=0;
+       HashMap<Character, Integer>origin = new HashMap<>();
+       for(char c : input.toCharArray()){
+           origin.put(c, origin.getOrDefault(c,0)+1);
+       }
+       for(int i =1; i<N; i++){
+           HashMap<Character,Integer> map = new HashMap<>(origin);
+           String word = br.readLine();
+            int num=0;//차이나는 개수
+           for(char temp : word.toCharArray()){
+               if(map.containsKey(temp)){
+                   if(map.get(temp)>0){
+                       map.put(temp,map.get(temp)-1);
+                       if(map.get(temp)==0) map.remove(temp);
+                   }else num++;
+               }else num++;
+           }
+           if(len> word.length()){
+               for(Character key: map.keySet()){
+                   num++;
+               }
+           }
+           if(Math.abs(num)<2) ans++;
+       }
+       System.out.println(ans);
+   }
 
-        N =Integer.parseInt(br.readLine());
-        arr = new String[N];
-        for(int i =0; i<N; i++){
-            arr[i]=br.readLine();
-        }
-
-
-        HashMap<Character, Integer> map = new HashMap<>();
-        
-        for(int i =0; i<arr[0].length(); i++){
-            map.put(arr[0].charAt(i), map.getOrDefault(arr[0].charAt(i),0)+1);
-        }
-
-        int ans=0;
-        String target = arr[0];
-        for(int i =1; i<N; i++){
-        
-            char[] cur = arr[i].toCharArray();
-            HashMap<Character, Integer> originmap = new HashMap<>(map); //위에서 저장한거 복제
-            int cnt =0; //알파벳 개수 세기
-            for(int j=0; j<cur.length; j++){
-                 if(originmap.containsKey(cur[j]) && originmap.get(cur[j])>0){
-                     originmap.put(cur[j], originmap.get(cur[j])-1); // 같은 거 있음 -1
-                     cnt++;
-                 }
-            }
-            if(cur.length == target.length() -1){
-                if(cnt ==  cur.length) ans++;
-            }else if(cur.length == target.length()+1){
-                if(cnt == target.length()) ans++;
-            }else if(cur.length == target.length()){
-                if(cnt == cur.length || cnt == cur.length-1) ans++;
-            }
-        }
-        System.out.println(ans);
-    }
 }

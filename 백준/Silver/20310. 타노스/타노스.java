@@ -1,45 +1,50 @@
+import javax.imageio.ImageTranscoder;
 import java.io.*;
+import java.text.CollationElementIterator;
 import java.util.*;
 
 public class Main {
 
-    static int n,k,t,m;
-    public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+   public static void main(String[] args)throws IOException {
+       StringBuilder sb = new StringBuilder();
+       BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String str = br.readLine();
-        char [] ch = str.toCharArray();
-        boolean[] check = new boolean[str.length()];
-        int cntOne = 0;
-        int cntZero = 0;
+        int oneC=0;
+        int zeroC=0;
+        ArrayDeque<Integer> q = new ArrayDeque<>();
         for(int i =0; i<str.length(); i++){
-            int n =  ch[i]-'0';
-            if(n ==1) cntOne++;
-            else if(n ==0) cntZero++;
+            int n = str.charAt(i)-'0';
+            if(n ==1) oneC++;
+            else if(n==0) zeroC++;
+            q.offer(n);
         }
-        int idx =0;
-        int removeOne = cntOne/2;
-        while(removeOne>0){
-            if(str.charAt(idx) == '1'){
-                check[idx] = true;
-                removeOne--;
-            }
-            idx++;
-        }
-        idx= str.length()-1;
-        int removeZero = cntZero/2;
-        while(removeZero>0 ){
-            if(str.charAt(idx)=='0'){
-                check[idx] = true;
-                removeZero--;
-            }
-            idx--;
-        }
-        StringBuilder sb = new StringBuilder();
-        for(int i =0; i< str.length(); i++){
-            if(!check[i]){
-                sb.append(ch[i]);
-            }
-        }
-        System.out.println(sb);
-    }
+        ArrayDeque<Integer>secondQ = new ArrayDeque<>();
+        oneC = oneC/2;
+        zeroC = zeroC/2;
+        //1은 앞에서부터 싹 빼기
+       while(oneC>0){
+           int cur = q.poll();
+           if(cur == 1) oneC--;
+           else{
+               secondQ.add(cur);
+           }
+       }
+       for(int i : q){
+           secondQ.add(i);
+       }
+       //0은 뒤에서 부터 싹 빼기
+       while(zeroC>0){
+           int cur = secondQ.pollLast();
+           if(cur ==0)  zeroC--;
+           else{
+               sb.append(cur);
+           }
+       }
+       int len = secondQ.size();
+       for(int i =0; i<len; i++){
+           sb.append(secondQ.pollLast());
+       }
+       System.out.println(sb.reverse());
+   }
+
 }

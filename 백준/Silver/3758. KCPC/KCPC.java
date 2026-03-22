@@ -1,71 +1,72 @@
+import javax.imageio.ImageTranscoder;
 import java.io.*;
+import java.text.CollationElementIterator;
 import java.util.*;
 
 public class Main {
-    static class Team {
+    static class Team implements Comparable<Team>{
         int id;
-        int[] scores;
-        int submitCount;
-        int lastSubmitTime;
-        int totalScore;
-
-        public Team(int id, int k) {
+        int sum; // 점수 합
+        int cnt; // 총 제출 횟수
+        int lastTime; //마지막 제출 인덱스 번호
+        public Team(int id, int sum, int cnt, int lastTime){
             this.id = id;
-            this.scores = new int[k + 1];
-            this.submitCount = 0;
-            this.lastSubmitTime = 0;
-            this.totalScore = 0;
+            this.sum =sum;
+            this.cnt =cnt;
+            this.lastTime = lastTime;
         }
 
-        public void submit(int problem, int score, int time) {
-            if (score > scores[problem]) {
-                totalScore += score - scores[problem];
-                scores[problem] = score;
-            }
-            submitCount++;
-            lastSubmitTime = time;
+        @Override
+        public int compareTo(Team o) {
+            if (this.sum != o.sum) return o.sum - this.sum;
+            if (this.cnt != o.cnt) return this.cnt - o.cnt;
+            return this.lastTime - o.lastTime;
         }
     }
-    static int n,k,t,m;
-    public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int T = Integer.parseInt(br.readLine());
-        for(int test=0; test<T; test++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            n = Integer.parseInt(st.nextToken());
-            k = Integer.parseInt(st.nextToken());
-            t = Integer.parseInt(st.nextToken());
-            m = Integer.parseInt(st.nextToken());
-            Team[] teams = new Team[n + 1];
-            for (int i = 1; i <= n; i++) {
-                teams[i] = new Team(i, k);
-            }
-            for (int M = 0; M < m; M++) {
-                st = new StringTokenizer(br.readLine());
-                int i = Integer.parseInt(st.nextToken());
-                int j = Integer.parseInt(st.nextToken());
-                int s = Integer.parseInt(st.nextToken());
-                teams[i].submit(j,s, M+1);
-            }
+   public static void main(String[] args)throws IOException {
+       StringBuilder sb = new StringBuilder();
+       BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+       int T = Integer.parseInt(br.readLine());
+       for(int t=0; t<T; t++){
+           StringTokenizer st = new StringTokenizer(br.readLine());
+           int n= Integer.parseInt(st.nextToken()); // 팀의 개수
+           int k=Integer.parseInt(st.nextToken()); //문제의 개수
+           int id = Integer.parseInt(st.nextToken()); // 팀 id
+           int m = Integer.parseInt(st.nextToken()); //로그 엔트리 개수
+           Team[] teams = new Team[n+1];
+           int[][] score = new int[n + 1][k + 1];
+           for(int i =1; i<=n; i++){
+               teams[i]= new Team(i,0,0,-1);
+           }
 
-            List<Team> list = new ArrayList<>();
-            for (int i = 1; i <= n; i++) {
-                list.add(teams[i]);
-            }
-            list.sort((a, b) -> {
-                if (b.totalScore != a.totalScore)
-                    return b.totalScore - a.totalScore; // 총점 높은 순
-                if (a.submitCount != b.submitCount)
-                    return a.submitCount - b.submitCount; // 제출 횟수 적은 순
-                return a.lastSubmitTime - b.lastSubmitTime; // 마지막 제출 빠른 순
-            });
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).id == t) {
-                    System.out.println(i + 1); // 등수는 1부터 시작
-                    break;
+           for(int e =0; e<m; e++){
+               st = new StringTokenizer(br.readLine());
+               int idx = Integer.parseInt(st.nextToken());
+               int j = Integer.parseInt(st.nextToken());
+               int s = Integer.parseInt(st.nextToken());
+               teams[idx].cnt++;
+               teams[idx].lastTime = e;
+               score[idx][j] = Math.max(score[idx][j], s);
+           }
+           //팀 총합 저장
+           for(int i=1; i<=n; i++){
+               int hap =0;
+               for(int j =1; j<=k; j++){
+                   hap +=score[i][j];
+               }
+               teams[i].sum =hap;
+           }
+           Arrays.sort(teams,1, n+1);
+           int r=1;
+           for (int i = 1; i <= n; i++) {
+               if (teams[i].id == id) {
+                   sb.append(i).append("\n");
+                   break;
+               }
+           }
 
-                }
-            }
-        }
-    }
+       }
+       System.out.println(sb);
+   }
+
 }

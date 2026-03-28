@@ -1,42 +1,48 @@
-import java.util.*;
+import javax.imageio.ImageTranscoder;
 import java.io.*;
+import java.util.*;
 
-public class Main{
-    static int N,M;
-    static String[][] title;
-    static StringBuilder sb = new StringBuilder();
-    public static void main(String[] args) throws IOException{
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+public class Main {
 
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
-        title = new String[N][2];
+   public static void main(String[] args)throws IOException {
+       StringBuilder sb = new StringBuilder();
+       BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+       StringTokenizer st= new StringTokenizer(br.readLine());
+        int N  =Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
+        HashMap<Integer, String> map = new HashMap<>();
+        HashMap<Integer, String> temp = new HashMap<>();
+        for(int i =0; i<N; i++){
+            st =new StringTokenizer(br.readLine());
+            String str = st.nextToken();
+            int num = Integer.parseInt(st.nextToken());
+            if(temp.containsKey(num))continue;
 
-        for(int i=0; i<N;i++){
-            st = new StringTokenizer(br.readLine());
-            title[i][0] = st.nextToken();
-            title[i][1] = st.nextToken();
+            temp.put(num,str);
+            map.put(num, str);
         }
+        List<Integer> keySet = new ArrayList<>(map.keySet());
+        keySet.sort((o1,o2)-> o1-o2);
+
         for(int i =0; i<M; i++){
-            int num = Integer.parseInt(br.readLine());
-            bSearch(num);
+            int score = Integer.parseInt(br.readLine());
+            sb.append(map.get(binary(keySet,map,score))).append("\n");
         }
-        System.out.println(sb);
-    }
-    private static void bSearch(int n){
-        int start =0;
-        int end = N-1;
-        while(start <=end){
-            int mid =(start+end)/2;
-            int titleInt = Integer.parseInt(title[mid][1]); //초기에 설정된 값
-            if(titleInt <n){
-                start = mid+1;
-            }
-            else{
-                end = mid-1;
-            }
-        }
-        sb.append(title[start][0]).append("\n");
+       System.out.println(sb);
+
+   }
+    public static int binary(List<Integer> key,HashMap<Integer ,String> map, int score){
+       int lo=0;
+       int hi=map.size();
+       int mid ;
+       while(lo<hi){
+           mid = (hi-lo)/2 + lo;
+           if(key.get(mid)<score){
+                lo = mid+1;
+           }else{
+               hi = mid;
+           }
+       }
+       return key.get(hi);
     }
 }

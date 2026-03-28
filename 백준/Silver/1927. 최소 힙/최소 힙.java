@@ -1,25 +1,26 @@
+import javax.imageio.ImageTranscoder;
 import java.io.*;
 import java.util.*;
+
 public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        HashSet<Integer> set = new HashSet<>();
+
+   public static void main(String[] args)throws IOException {
+       StringBuilder sb = new StringBuilder();
+       BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
         PriorityQueue<Integer> pq = new PriorityQueue<>();
-        int n = Integer.parseInt(br.readLine());
-        StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < n; i++){
-            int a =  Integer.parseInt(br.readLine());
-            if(a ==0){
+        for(int i =0; i<N; i++){
+            int input = Integer.parseInt(br.readLine());
+            if(input==0){
                 if(pq.isEmpty()){
                     sb.append(0).append("\n");
                 }else{
                     sb.append(pq.poll()).append("\n");
                 }
             }else{
-                pq.offer(a);
+                pq.offer(input);
             }
         }
-        System.out.println(sb);
-
-    }
+       System.out.println(sb);
+   }
 }

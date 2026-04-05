@@ -1,59 +1,84 @@
+import javax.swing.*;
 import java.io.*;
 import java.util.*;
 
 public class Main {
-    static class Point{
-        int x,y;
-        public Point(int x, int y){
-            this.x = x;
-            this.y = y;
-        }
-    }
-    public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());
-        ArrayList<Point> points = new ArrayList<>();
-        int maxH = 0;
-        int maxX = 0;
-        for(int i =0; i<N; i++){
-            StringTokenizer st= new StringTokenizer(br.readLine());
 
-            int L = Integer.parseInt(st.nextToken());
-            int H = Integer.parseInt(st.nextToken());
-            points.add(new Point(L,H));
-            if(H>maxH){
-                maxH = H;
-                maxX = L;
-            }
-        }
-        Collections.sort(points,(a,b)->a.x-b.x);
-        //왼쪽에서 출발
-        int area = 0;
-        int curY= points.get(0).y;
-        int curX= points.get(0).x;
-        for(Point p : points){
-            if(p.x >maxX) break;
-            if(p.y >= curY){
-                area += (p.x - curX)*curY;
-                curX = p.x;
-                curY = p.y;
-            }
-        }
+   public static void main(String[] args)throws IOException {
+       StringBuilder sb = new StringBuilder();
+       BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+       int maxX= 0;
+       int maxY = 0;
+       int N = Integer.parseInt(br.readLine());
+       HashMap<Integer, Integer> map = new HashMap<>();
+       for(int i =0; i<N; i++){
+           StringTokenizer st= new StringTokenizer(br.readLine());
+           int x = Integer.parseInt(st.nextToken());
+           int y = Integer.parseInt(st.nextToken());
+           if(maxY <y){
+               maxY = Math.max(maxY,y);
+               maxX = x;
+           }
+           maxY = Math.max(maxY,y);
+           map.put(x,y);
+       }
+       int size=0;
+       Map<Integer, Integer> sortedMap = new TreeMap<>(map);
+       Set<Integer> keySet = sortedMap.keySet();
+       // 최고 높이의 가장 왼쪽, 가장 오른쪽 위치 찾기
+       int leftMaxX = -1;
+       int rightMaxX = -1;
 
-        //오른쪽부터 출발
-        curX = points.get(points.size()-1).x;
-        curY = points.get(points.size()-1).y;
-        for(int i =points.size()-1; i>=0; i--){
-            Point p = points.get(i);
-            if(p.x<maxX) break;;
-            if(p.y>=curY){
-                area += (curX - p.x)*curY;
-                curX = p.x;
-                curY = p.y;
-            }
-        }
+       for (int k : keySet) {
+           if (sortedMap.get(k) == maxY) {
+               if (leftMaxX == -1) leftMaxX = k;
+               rightMaxX = k;
+           }
+       }
+       int nx =-1;
+       int ny =-1;
+       //왼쪽부터 출발
+       for(int k : keySet){
+           if(nx ==-1 && ny ==-1){
+               nx = k;
+               ny = sortedMap.get(k);
+               continue;
+           }
+           int height =sortedMap.get(k);
+           if(leftMaxX == k) {
+               size += (k-nx)*ny;
+               break;
+           }
 
-        area += maxH;
-        System.out.println(area);
-    }
+           if(ny<height){
+               size += (k-nx)*ny;
+               ny = height;
+               nx = k;
+           }
+       }
+       //오른쪽 계산
+       ArrayList<Integer> key = new ArrayList<>(keySet);
+       for(int i = sortedMap.size()-1; i>=0; i--){
+           int k = key.get(i);
+           if(i == sortedMap.size()-1){
+               nx = k;
+               ny = sortedMap.get(k);
+               continue;
+           }
+           int height =sortedMap.get(k);
+           if(rightMaxX == k) {
+               size += (nx - k) * ny;
+               break;
+           }
+           if(ny<height){
+               size += (nx-k)*ny;
+               ny = height;
+               nx = k;
+           }
+
+       }
+       size += (rightMaxX - leftMaxX +1)*maxY;
+       System.out.println(size);
+
+   }
 }

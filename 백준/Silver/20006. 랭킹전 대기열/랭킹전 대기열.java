@@ -1,58 +1,69 @@
-import javax.imageio.ImageTranscoder;
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class Main {
-    static class Player {
+    public static class Room{
+        int idx;
         int level;
-        String name;
-
-        Player(int level, String name) {
-            this.level = level;
-            this.name = name;
+        public Room(int idx, int level){
+            this.idx = idx;
+            this.level =level;
         }
     }
    public static void main(String[] args)throws IOException {
        StringBuilder sb = new StringBuilder();
        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-       StringTokenizer st = new StringTokenizer(br.readLine());
-       int p = Integer.parseInt(st.nextToken());
+
+       StringTokenizer st= new StringTokenizer(br.readLine());
+       int p =Integer.parseInt(st.nextToken());
        int m = Integer.parseInt(st.nextToken());
-       ArrayList<List<Player>> rooms = new ArrayList<>();
-       ArrayList<Integer> roomLevel = new ArrayList<>();
+       ArrayList<Room> rooms = new ArrayList<>(); //현재 존재하는 방
+       ArrayList<ArrayList<String[]>> member = new ArrayList<>(); //방에 포함된 멤버 정보
+
        for(int i =0; i<p; i++){
            st = new StringTokenizer(br.readLine());
-           int l =Integer.parseInt(st.nextToken()); //레벨
-           String n=st.nextToken(); //닉네임
+           int level = Integer.parseInt(st.nextToken());
+           String id = st.nextToken();
 
-           boolean checkInput =false;
-           for(int j=0; j<roomLevel.size(); j++){
-                   if(l>=roomLevel.get(j)-10 && l<=roomLevel.get(j)+10 && rooms.get(j).size()<m){
-                       rooms.get(j).add(new Player(l,n));
-                       checkInput = true;
-                       break;
-                   }
-           }
-           if(!checkInput){
-                   //방 만들기
-               List<Player> newRoom = new ArrayList<>();
-               newRoom.add(new Player(l, n));
-               rooms.add(newRoom);
-               roomLevel.add(l);
+            if(rooms.isEmpty()){
+                rooms.add(new Room(0,level));
+                ArrayList<String[]> newRoom = new ArrayList<>();
+                newRoom.add(new String[]{Integer.toString(level), id});
+                member.add(newRoom);
+            }
+            else {
+                //기존 방 레벨 비교해서 +-10이면 그 방에 넣기
+                boolean addCheck = false;
+                for(Room temp : rooms){
+                    if(Math.abs(temp.level - level) <=10 && member.get(temp.idx).size()<m){
+                        member.get(temp.idx).add(new String[]{Integer.toString(level),id});
+                        addCheck =true;
+                        break;
+                    }
+                }
+                if(!addCheck){
+                    ArrayList<String[]> newRoom = new ArrayList<>();
+                    newRoom.add(new String[]{Integer.toString(level), id});
+                    member.add(newRoom);
+                    rooms.add(new Room(rooms.size(),level));
+                }
+            }
+       }
+
+       for(ArrayList<String[]> list : member){
+           list.sort((a,b)-> a[1].compareTo(b[1]));
+           if(list.size()==m){
+               sb.append("Started!").append("\n");
+               for(String[] player : list){
+                   sb.append(player[0] +" "+ player[1]).append("\n");
+               }
+           }else{
+               sb.append("Waiting!").append("\n");
+               for(String[] player : list){
+                   sb.append(player[0] +" "+ player[1]).append("\n");
+               }
            }
        }
-        for(List<Player> room : rooms){
-            if(room.size() ==m){
-                sb.append("Started!").append("\n");
-            }else {
-                sb.append("Waiting!").append("\n");
-            }
-            room.sort(Comparator.comparing(player -> player.name));
-            for (Player player : room) {
-                sb.append(player.level).append(" ").append(player.name).append("\n");
-            }
-        }
        System.out.println(sb);
    }
 }

@@ -1,73 +1,71 @@
 import java.io.*;
-import java.sql.PreparedStatement;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Main {
     static int N,M,V;
-    static ArrayList<Integer>[] list;
-    static StringBuilder sb_dfs = new StringBuilder();
-    static StringBuilder sb_bfs = new StringBuilder();
-    static boolean[] visited_dfs;
-    static boolean[] visited_bfs;
-    public static void main(String[] args) throws IOException {
+    static ArrayList <Integer>[] node;
+    public static void main(String[] args)throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-
+        StringTokenizer st= new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
         V = Integer.parseInt(st.nextToken());
-
-        visited_dfs = new boolean[N+1];
-        visited_bfs = new boolean[N+1];
-        list = new ArrayList[N+1];
-        for(int i =0; i<N+1; i++){
-            list[i] = new ArrayList<>();
+        node = new ArrayList[N+1];
+        for(int i =0; i<=N; i++){
+            node[i] = new ArrayList<>();
         }
+
         for(int i =0; i<M; i++){
             st = new StringTokenizer(br.readLine());
-            int a = Integer.parseInt(st.nextToken());
-            int b = Integer.parseInt(st.nextToken());
-
-            list[a].add(b);
-            list[b].add(a);
-
+            int a =Integer.parseInt(st.nextToken());
+            int b =Integer.parseInt(st.nextToken());
+            node[a].add(b);
+            node[b].add(a);
         }
-        for(int i =0; i<N+1; i++){
-            Collections.sort(list[i]);
+        for(ArrayList<Integer> list : node){
+            Collections.sort(list);
         }
-//        sb_dfs.append(V);
-        visited_dfs[V]=true;
-        visited_bfs[V]=true;
-        dfs(V);
+        boolean[] v = new boolean[N+1];
+        int[] num = new int[N+1];
+        v[V] = true;
+        dfs(V,v,0, num);
+        sb.append("\n");
         bfs(V);
-        System.out.println(sb_dfs);
-        System.out.println(sb_bfs);
+        System.out.println(sb);
     }
-    public static void dfs(int v){
-        sb_dfs.append(v).append(" ");
-        for(int i =0; i<list[v].size(); i++){
-            int n = list[v].get(i);
-            if(!visited_dfs[n]){
-                visited_dfs[n] =true;
-                dfs(n);
+    static StringBuilder sb = new StringBuilder();
+    public static void dfs(int start, boolean[] v, int depth, int[] num){
+        sb.append(start).append(" ");
+        if(depth ==N){
+            return;
+        }
+        for(int i =0; i<node[start].size(); i++){
+            int next = node[start].get(i);
+            if(!v[next]){
+                v[next] = true;
+                num[depth] = next;
+                dfs(next, v, depth+1, num);
+
             }
         }
     }
-    public static void bfs(int v){
-        Queue<Integer> q = new LinkedList<>();
-        q.offer(v);
-
-        sb_bfs.append(v).append(" ");
+    public static void bfs(int start){
+        Queue<Integer> q= new LinkedList<>();
+        q.offer(start);
+        boolean[] v = new boolean[N+1];
+        v[start] = true;
         while(!q.isEmpty()){
-            int cur = q.poll();
-            for(int i =0; i<list[cur].size(); i++){
-                int n = list[cur].get(i);
-                if(!visited_bfs[n]){
-                    visited_bfs[n] =true;
-                    q.offer(n);
-                    sb_bfs.append(n).append(" ");
+            int cur= q.poll();
+            sb.append(cur).append(" ");
+            for(int i =0; i<node[cur].size(); i++){
+                int next = node[cur].get(i);
+                if(!v[next]){
+                    v[next] = true;
+                    q.offer(next);
                 }
             }
         }
+
     }
 }

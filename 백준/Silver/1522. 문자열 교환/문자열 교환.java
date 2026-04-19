@@ -1,38 +1,27 @@
+import com.sun.security.jgss.GSSUtil;
+
+import javax.swing.*;
 import java.io.*;
 import java.util.*;
 
 public class Main {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args)throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String str = br.readLine();
-        char[] arr = new char[str.length()];
-        int acnt = 0;
+
+        String str= br.readLine();
+        int cntA =0;
         for(int i =0; i<str.length(); i++){
-            arr[i] = str.charAt(i);
-            if(arr[i] =='a') acnt++;
+            if(str.charAt(i)=='a') cntA++;
         }
-        if(acnt ==0 || acnt ==str.length()){
-            System.out.println(0);
-            return;
-        }
-        int bwindow = 0;
-        for(int i =0; i<acnt; i++){
-            if(arr[i] =='b') bwindow++;
-        }
-        int value = bwindow;
-
-        for(int i =1; i<str.length(); i++){
-            if(arr[i-1] =='b'){
-                bwindow--;
+        int min = Integer.MAX_VALUE;
+        for(int i =0; i<str.length(); i++){
+            int cntB=0;
+            for(int j=i; j<cntA+i; j++){
+                if(str.charAt(j % str.length()) == 'b') cntB++;
             }
-
-            int idx = (i +acnt -1) % str.length();
-            if(arr[idx] =='b') bwindow++;
-
-            value=Math.min(value,bwindow);
+            min = Math.min(min, cntB);
         }
-        System.out.println(value);
-
+        System.out.println(min);
     }
 }

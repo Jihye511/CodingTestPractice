@@ -1,74 +1,67 @@
+import com.sun.security.jgss.GSSUtil;
+
+import javax.swing.*;
 import java.io.*;
 import java.util.*;
 
 public class Main {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args)throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.parseInt(br.readLine());
-        String str = br.readLine();
-        boolean[] color = new boolean[str.length()];
 
-        for(int i =0; i<str.length(); i++) {
-            if (str.charAt(i) == 'R') {
-                //R일때 true
-                color[i] = true;
-            }else color[i] = false;
-        }
-        int size = str.length();
-        //R을 맨 오른쪽으로
+        int N= Integer.parseInt(br.readLine());
+        String str= br.readLine();
+
+//        for(char c : str.toCharArray()){
+//            if(c=='B') blue++;
+//            else if(c=='R') red++;
+//        }
+        int minValue = Integer.MAX_VALUE;
+
+        //파랑 왼쪽으로
+        int blue =0;
         boolean change = false;
-        int minValue =Integer.MAX_VALUE;
-        int  temp =0;
-        for(int i =size-1; i>=0; i--){
-            if(!change && color[i]) continue;
-            else if(!change && !color[i]) {
-                change = true; //이제부터는 r 카운트
-            }else if(change){
-                if(color[i]) temp++;
+        for(int i =0; i<str.length(); i++){
+            if(!change && str.charAt(i)=='B') continue;
+            else if (!change && str.charAt(i)!='B') change = true;
+            else if(change){
+                if(str.charAt(i)=='B') blue++;
             }
         }
-        minValue = Math.min(minValue, temp);
-        temp =0;
+        minValue = Math.min(minValue,blue);
+        int red=0;
+        //빨강 왼쪽으로
         change = false;
-        //R을 맨 왼쪽
-        for(int i =0; i<size; i++){
-            if(!change && color[i]) continue;
-            else if(!change && !color[i]) {
-                change = true; //이제부터는 r 카운트
-            }else if(change){
-                if(color[i]) temp++;
+        for(int i =0; i<str.length(); i++){
+            if(!change && str.charAt(i)=='R') continue;
+            else if (!change && str.charAt(i)!='R') change = true;
+            else if(change){
+                if(str.charAt(i)=='R') red++;
             }
         }
-        minValue = Math.min(minValue, temp);
-        temp =0;
+        minValue = Math.min(minValue,red);
+        //파랑 올ㄴ쪽
+        blue =0;
         change = false;
-        //B을 맨 오른쪽
-        for(int i =size-1; i>=0; i--){
-            if(!change && !color[i]) continue;
-            else if(!change && color[i]) {
-                change = true; //이제부터는 r 카운트
-            }else if(change){
-                if(!color[i]) temp++;
+        for(int i =str.length()-1; i>=0; i--){
+            if(!change && str.charAt(i)=='B') continue;
+            else if (!change && str.charAt(i)!='B') change = true;
+            else if(change){
+                if(str.charAt(i)=='B') blue++;
             }
         }
-
-        minValue = Math.min(minValue, temp);
-        temp =0;
+        minValue = Math.min(minValue,blue);
+        //빨강 오른쪽
+        red=0;
         change = false;
-        //B를 맨 왼쪽
-        for(int i =0; i<size; i++){
-            if(!change && !color[i]) continue;
-            else if(!change && color[i]) {
-                change = true; //이제부터는 r 카운트
-            }else if(change){
-                if(!color[i]) temp++;
+        for(int i =str.length()-1; i>=0; i--){
+            if(!change && str.charAt(i)=='R') continue;
+            else if (!change && str.charAt(i)!='R') change = true;
+            else if(change){
+                if(str.charAt(i)=='R') red++;
             }
         }
-        minValue = Math.min(minValue, temp);
-
+        minValue = Math.min(minValue,red);
         System.out.println(minValue);
-
-
     }
 }

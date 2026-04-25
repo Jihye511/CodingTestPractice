@@ -1,52 +1,46 @@
-import javax.imageio.ImageTranscoder;
 import java.io.*;
 import java.util.*;
+
 public class Main {
     static int N,M;
-    static int[] money;
-    static int hap;
-    static int min;
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st= new StringTokenizer(br.readLine());
-
+        StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
-        money = new int[N];
+        int[] money = new int[N];
+        long max =0;
+        long sum =0;
         for(int i =0; i<N; i++){
             money[i] = Integer.parseInt(br.readLine());
-            min = Math.max(money[i], min);
-            hap+= money[i];
+            max = Math.max(max, money[i]);
+            sum += money[i];
         }
-        System.out.println(binary());
-
-    }
-    public static int binary(){
-        int lo =min;
-        int hi = hap;
-        int ans =0;
+        long lo =max;
+        long hi = sum;
+        long ans = 0;
         while(lo<=hi){
-            int mid =(hi-lo)/2 + lo;
-            if(countDays(mid)>M){
-                lo = mid+1;
-            }else{
+            long mid = (hi-lo)/2 + lo;
+            if(count(mid, money)<=M){
                 ans = mid;
-                hi = mid-1;
+                hi=mid-1;
+            }else{
+                lo = mid +1;
             }
         }
-        return ans;
+        System.out.println(ans);
     }
-    public static int countDays(int value){
-         int cnt =0;
-         int cur= 0;
-         for(int i : money){
-             if(i > cur){
-                 cur = value;
-                 cnt++;
-             }
-             cur -= i;
-
-         }
-         return cnt;
+    public static int count(long mid,int[] money){
+        int cnt =0; // 인출횟수
+        long today=0;
+        for(int i =0; i<money.length; i++){
+            if(today<money[i]){
+                cnt++;
+                today = mid - money[i];
+            }else{
+                today -= money[i];
+            }
+        }
+        return cnt;
     }
 }

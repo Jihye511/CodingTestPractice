@@ -1,47 +1,40 @@
 import java.io.*;
 import java.util.*;
-class Node{
-    int node,time;
-    public Node(int node, int time){
-        this.node = node;
-        this.time = time;
-    }
-}
+
 public class Main {
-    static int K,C;
-    static int time = Integer.MAX_VALUE;
-    static boolean[] visited;
-    public static void main(String[] args)throws IOException{
+    static int N,K;
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-
+        N = Integer.parseInt(st.nextToken());
         K = Integer.parseInt(st.nextToken());
-        C = Integer.parseInt(st.nextToken());
-        visited = new boolean[100001];
-        bfs(K);
-        System.out.println(time);
-    }
-    public static void bfs(int start){
-        Queue<Node> q = new ArrayDeque<>();
-        q.offer(new Node(start,0));
-        visited[start]=true;
-        while(!q.isEmpty()){
-            Node n = q.poll();
-            if(n.node ==C){
-                time = Math.min(time, n.time);
+        int[] num = new int[100001];
+        Arrays.fill(num, Integer.MAX_VALUE);
+        num[N] = 0;
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a,b)->a[1]-b[1]);
+        pq.offer(new int[]{N,0});
+        int ans = 0;
+        while(!pq.isEmpty()) {
+            int[] cur = pq.poll();
+            int idx = cur[0];
+            if(idx==K) {
+                ans = cur[1];
+                break;
             }
-            if(n.node*2 <100001 && !visited[n.node*2]){
-                visited[n.node*2]=true;
-                q.offer(new Node(n.node*2,n.time));
+            if (num[idx] < cur[1]) continue;
+            if (idx > 0 && num[idx - 1] > num[idx] + 1) {
+                num[idx - 1] = num[idx] + 1;
+                pq.offer(new int[]{idx - 1, num[idx - 1]});
             }
-            if(n.node-1 >=0&& !visited[n.node-1]){
-                visited[n.node-1] = true;
-                q.offer(new Node(n.node-1,n.time+1));
+            if (idx < 99999 && num[idx + 1] > num[idx] + 1) {
+                num[idx + 1] = num[idx] + 1;
+                pq.offer(new int[]{idx + 1, num[idx + 1]});
             }
-            if(n.node+1 <100001&& !visited[n.node+1]){
-                visited[n.node+1] = true;
-                q.offer(new Node(n.node+1,n.time+1));
+            if(idx *2<=100000 && num[idx*2]>num[idx]){
+                num[idx*2] = num[idx];
+                pq.offer(new int[]{idx*2, num[idx*2]});
             }
         }
+        System.out.println(ans);
     }
 }

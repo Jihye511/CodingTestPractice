@@ -3,7 +3,6 @@ import java.util.*;
 
 public class Main {
    static int N,M,X;
-   static ArrayList<int[]>[] node;
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -11,9 +10,11 @@ public class Main {
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
         X = Integer.parseInt(st.nextToken());
-        node = new ArrayList[N+1];
+        ArrayList<int[]>[] node = new ArrayList[N+1];
+        ArrayList<int[]>[] reverseNode = new ArrayList[N+1];
         for(int i =0; i<N+1; i++){
             node[i] = new ArrayList<>();
+            reverseNode[i] = new ArrayList<>();
         }
         for(int i =0; i<M; i++){
             st= new StringTokenizer(br.readLine());
@@ -22,26 +23,20 @@ public class Main {
             int t = Integer.parseInt(st.nextToken());
 
             node[s].add(new int[]{e,t});
+            reverseNode[e].add(new int[]{s,t});
         }
-        int[] ans = new int[N+1];
         //도착지에서 각 도시별 최단거리(공통)
-        int[] toHome = shortestTime(X, 1);
-
+        int[] toHome = shortestTime(reverseNode,X);
+        int[] toParty = shortestTime(node, X);
         int time = 0;
         for(int i =1; i<N+1; i++){
-            if(i ==X) {
-                ans[i] = 0;
-                continue;
-            };
-            int[] temp = shortestTime(i,X);
-            ans[i] = toHome[i] + temp[X];
-            time = Math.max(time, ans[i]);
-
+            time = Math.max(time, toHome[i]+ toParty[i]);
         }
+
         System.out.println(time);
 
     }
-    public static int[] shortestTime(int start, int end){
+    public static int[] shortestTime(ArrayList<int[]>[] node, int start){
         int[] route = new int[N+1];
         Arrays.fill(route, Integer.MAX_VALUE);
         PriorityQueue<int[]> pq = new PriorityQueue<>((a,b)->a[1]-b[1]);

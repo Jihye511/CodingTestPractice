@@ -1,48 +1,40 @@
-import java.util.*;
 import java.io.*;
-public class Main{
-    static long N;
-    static long M;
-    static long[] office;
-    public static void main(String[] args) throws IOException{
+import java.util.*;
+
+public class Main {
+    static int N,M;
+    static int[] time;
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-
-        N = Long.parseLong(st.nextToken());
-        M = Long.parseLong(st.nextToken());
-
-        office = new long[(int)N];
-        for(int i=0; i<N; i++) {
-            office[i] = Integer.parseInt(br.readLine());
+        StringTokenizer st= new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        time = new int[N];
+        long max = 0;
+        for(int i =0; i<N; i++){
+            time[i] = Integer.parseInt(br.readLine());
+            max = Math.max(max, time[i]);
         }
-        Arrays.sort(office);
-
-        bSearch();
+        //소요시간으로 이탐
+        long lo =1;
+        long hi = max*M;
+        while (lo<hi){
+            long mid = (hi-lo)/2 + lo;
+            if(countPeople(mid)>=M){
+                hi = mid;
+            }else {
+                lo = mid+1;
+            }
+        }
+        System.out.println(hi);
 
     }
-    public static void bSearch(){
-        long start =1;
-        long end = M*office[(int)N-1];
-        long result = 0;
-        while(start<=end){
-            long mid = (start+end)/2;
-            //mid초 일떄 심사 가능 인원수 계산
-            long cnt=0;
-            for(int i =0;i<N;i++){
-                cnt += (mid/office[i]);
-                if(cnt >=M){
-                    break;
-                }
-            }
-            //cnt>M -> 초를 줄여야...
-            if(cnt>=M){
-                end = mid-1;
-
-            }else{
-                start = mid+1;
-            }
+    public static long countPeople(long mid){
+        long cnt =0;
+        for(int i =0; i<time.length; i++){
+            cnt+= mid/time[i];
+            if(cnt>=M) return  cnt;
         }
-        System.out.println(start);
-
+        return cnt;
     }
 }

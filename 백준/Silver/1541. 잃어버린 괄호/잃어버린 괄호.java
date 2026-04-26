@@ -1,31 +1,25 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
-public class Main{
-    static String input;
-    static ArrayList<Integer> num = new ArrayList<>();
-    public static void main(String[] args) throws IOException{
+public class Main {
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-        input = br.readLine();
-        String[] split = input.split("-");
-
-        //나눈 식끼리 더해줘서 저장
-        for(String s : split){
+        String str = br.readLine();
+        String[] val = str.split("-");
+        ArrayList<Integer> list= new ArrayList<>();
+        for(String s:val){
+            String[] n = s.split("\\+");
             int sum =0;
-            String[] split2 = s.split("\\+");
-            for(String a : split2){
-                sum += Integer.parseInt(a);
+            for(String i : n){
+                int num = Integer.parseInt(i);
+                sum +=num;
             }
-            num.add(sum);
+            list.add(sum);
         }
-        //첫번째 항 빼고 다 빼기
-        int result = num.get(0);
-        for(int i=1; i<num.size(); i++){
-            result -=num.get(i);
+        int ans=list.get(0);
+        for(int i =1; i<list.size(); i++){
+            ans -= list.get(i);
         }
-        System.out.println(result);
+        System.out.println(ans);
     }
-
-
 }

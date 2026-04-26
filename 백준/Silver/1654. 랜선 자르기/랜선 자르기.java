@@ -1,43 +1,44 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
-public class Main{
-    static int K,N;
-    static int[] rope;
-    public static void main(String[] args)throws IOException{
+public class Main {
+    static int N,K;
+    static long[] num;
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-
+        StringTokenizer st= new StringTokenizer(br.readLine());
         K = Integer.parseInt(st.nextToken());
         N = Integer.parseInt(st.nextToken());
-
-        rope = new int[K];
+        num=  new long[K];
+        long max = 0;
         for(int i =0; i<K; i++){
-            rope[i] = Integer.parseInt(br.readLine());
+            num[i] = Integer.parseInt(br.readLine());
+            max = Math.max(max, num[i]);
         }
-        Arrays.sort(rope);
-        System.out.println(bSearch());
+        if(N==1){
+            System.out.println(num[0]);
+            return;
+        }
+        long lo =1;
+        long hi = max;
+        long ans=0;
+        while(lo<=hi){
+            long mid = (hi-lo)/2 + lo;
+            if(cut(mid)>=N){
+                ans =mid;
+                lo = mid+1;
+            }else{
+                hi = mid-1;
+            }
+        }
+        System.out.println(ans);
     }
-    public static long bSearch(){
-        long start = 1;
-        long end = rope[K-1];
-        long result =0;
-
-        while(start<=end){
-            long mid = (start + end) / 2;
-            long cnt = 0;
-            for (int i = 0; i < K; i++) {
-                cnt += rope[i] / mid;
-            }
-
-            if (cnt < N) {
-                end = mid - 1;
-            } else {
-                result = mid;
-                start = mid + 1;
-            }
+    public static long cut(long mid){
+        long cnt=0;
+        for(long i : num){
+            cnt+=i/mid;
+            if(cnt>=N) return cnt;
         }
-
-        return result;
+        return cnt;
     }
 }

@@ -1,39 +1,35 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
-public class Main{
-    static int N;
-    static int[] dp;
-    static int min=0;
-    public static void main(String[] args )throws IOException{
+public class Main {
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
 
-        N = Integer.parseInt(br.readLine());
-        dp = new int[N+1];
-        dp[0]=0;
-        dp[1]=0;
-        System.out.println(simulation(2,N));
-    }
-    public static int simulation(int X,int N){
-
-        while (X<=N){
-
-            //6의배수일때
-            if(X %6 ==0){
-                int min1 = Math.min(dp[X/2]+1,dp[X-1]+1);
-                int min2 = Math.min(dp[X/3]+1,dp[X-1]+1);
-                min = Math.min(min1, min2);
+        int[] dp = new int[N+1];
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        dp[1] = 0;
+        for(int i =2; i< N+1; i++){
+            if(i==2) {
+                dp[i] = 1;
+                continue;
             }
-            else if(X%3==0){
-                min= Math.min(dp[X/3]+1,dp[X-1]+1);
-            }else if(X%2==0){
-                min = Math.min(dp[X/2]+1,dp[X-1]+1);
-            }else{
-                min = dp[X-1]+1;
+            if(i==3) {
+                dp[i] =1;
+                continue;
             }
-            dp[X] = min;
-            X++;
+
+            //4부터
+            if(i%3==0){
+                dp[i] = Math.min(dp[i], dp[i/3]+1);
+            }
+            if(i%2==0){
+                dp[i] = Math.min(dp[i], dp[i/2]+1);
+            }
+            dp[i] = Math.min(dp[i],dp[i-1]+1);
         }
-        return dp[N];
+
+
+        System.out.println(dp[N]);
     }
 }

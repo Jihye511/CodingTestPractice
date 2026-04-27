@@ -1,32 +1,30 @@
+import javax.swing.*;
 import java.io.*;
 import java.util.*;
+
 public class Main {
-    static int[][] map;
-    static class Node{
-        int w,v;
-        public Node(int w,int v){
-            this.w=w;
-            this.v=v;
-        }
-    }
-    static Node[] node;
-    public static void main(String[] args) throws IOException {
-        StringBuilder sb = new StringBuilder();
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         int N = Integer.parseInt(st.nextToken());
         int K = Integer.parseInt(st.nextToken());
-        node = new Node[N];
-        int[] value = new int[K + 1];
-        for (int i = 0; i < N; i++) {
+        int[][] item = new int[N][2];
+        int[] dp = new int[K+1];
+        Arrays.fill(dp, 0);
+        for(int i =0; i<N; i++){
             st = new StringTokenizer(br.readLine());
-            int W = Integer.parseInt(st.nextToken());
-            int V = Integer.parseInt(st.nextToken());
+            item[i][0] = Integer.parseInt(st.nextToken());
+            item[i][1] = Integer.parseInt(st.nextToken());
+        }
 
-            for (int w = K; w >= W; w--) {
-                value[w] = Math.max(value[w], value[w - W] + V);
+        for(int i =0; i<N; i++){
+            int w = item[i][0];
+            int v = item[i][1];
+            for(int j = K; j>=w; j--){
+                dp[j] = Math.max(dp[j], dp[j-w]+v);
             }
         }
-        System.out.println(value[K]);
+        System.out.println(dp[K]);
+
     }
 }

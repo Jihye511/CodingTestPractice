@@ -1,29 +1,29 @@
 import java.io.*;
 import java.util.*;
-
 class Solution {
-    static int [] num;
     public String solution(String number, int k) {
-        StringBuilder sb = new StringBuilder();
-        
-        Stack<Integer> stack = new Stack<>();
-        for(int i =0; i<number.length(); i++){
-            int cur = number.charAt(i)-'0';
-            while(!stack.isEmpty() && k>0 && stack.peek()<cur){
+        String answer = "";
+        Stack<Integer> stack =new Stack<>();
+        for(int i =0; i< number.length(); i++){
+            int n = number.charAt(i) -'0';
+            //작은 숫자가 없을때까지 pop
+            while(!stack.isEmpty() && stack.peek()<n && k>0){
                 stack.pop();
                 k--;
             }
-            stack.add(cur);
+            
+            stack.push(n);
+            
         }
-        
         while(k-->0){
             stack.pop();
         }
-        
-        for(int s : stack){
-            sb.append(s);
+        StringBuilder sb = new StringBuilder();
+        while(!stack.isEmpty()){
+            int n = stack.pop();
+            sb.append(n);
         }
-        
-        return sb.toString();
+        answer = sb.reverse().toString();
+        return answer;
     }
 }
